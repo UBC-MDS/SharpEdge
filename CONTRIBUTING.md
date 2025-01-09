@@ -1,6 +1,6 @@
 # Contributing
 
-`sharpedge` is an open source project, and we welcome contributions of all kinds:
+SharpEdge is an open source project, and we welcome contributions of all kinds:
 new lessons, fixes to existing material, bug reports,
 and reviews of proposed changes are all welcome.
 
