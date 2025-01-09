@@ -24,7 +24,7 @@ introduce yourself and to meet some of our community members.
 
 2. If you have a [GitHub][github] account, or are willing to [create
    one][github-join], but do not know how to use Git, you can report problems
-   or suggest improvements by [creating an issue][new_issues]. This allows us to
+   or suggest improvements by [creating an issue][new-issues]. This allows us to
    assign the item to someone and to respond to it in a threaded discussion.
 
 3. If you are comfortable with Git, and would like to add or change material,
@@ -49,8 +49,8 @@ Please tag an administrator as a reviewer to ensure your PR is reviewed promptly
 ### What to Contribute
 
 There are many ways to contribute, from implementing new features and improving
-existing ones to updating or filling in the documentation and submitting [bug
-reports][issues] or fixing bugs about things that do not work, are not clear, or are missing.
+existing ones to updating or filling in the documentation and submitting bug
+reports or fixing bugs about things that do not work, are not clear, or are missing.
 
 ### Contribution Guidelines
 
@@ -85,7 +85,7 @@ Linux users; in order to be usable, our package must run equally well on all
 three.
 
 ### Attribution
-This Code of Conduct is inspired by [Software Carpentry CONTRIBUTING.md][attribution].
+This `CONTRIBUTING.md` is adapted from [Software Carpentry CONTRIBUTING.md][attribution].
 
 [attribution]: https://github.com/swcarpentry/r-novice-inflammation/blob/main/CONTRIBUTING.md
 [contact]: mailto:yuci21st@student.ubc.ca
@@ -93,7 +93,7 @@ This Code of Conduct is inspired by [Software Carpentry CONTRIBUTING.md][attribu
 [github-flow]: https://guides.github.com/introduction/flow/
 [github-join]: https://github.com/join
 [how-contribute]: https://egghead.io/courses/how-to-contribute-to-an-open-source-project-on-github
-[issues]: https://github.com/UBC-MDS/SharpEdge/issues
-[new_issues]: https://github.com/UBC-MDS/SharpEdge/issues/new
+[issues]: https://docs.github.com/en/issues/tracking-your-work-with-issues/configuring-issues/quickstart
+[new-issues]: https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/creating-an-issue
 [pull-request]: https://help.github.com/en/articles/creating-a-pull-request
 [repo]: https://github.com/UBC-MDS/SharpEdge
