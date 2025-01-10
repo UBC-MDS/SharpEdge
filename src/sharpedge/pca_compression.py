@@ -1,4 +1,5 @@
-"""
+def pca_compression(img, preservation_rate=0.9):
+    """
     Compress the input image using Principal Component Analysis (PCA).
     This function compresses the size of an image by applying the PCA method while retaining a specified 
     portion of the original data variance.
@@ -39,6 +40,5 @@
 
     Compress an RGB image with the default preservation rate (90%):
     >>> compressed_img = pca_compression(rgb_img)
-"""
-def pca_compression(img, preservation_rate=0.9):
+    """
     pass
