@@ -1,4 +1,4 @@
-def pooling_image(image, window_size, func=np.mean, color_map='gray'):
+def pooling_image(img, window_size, func=np.mean):
     """
     Perform pooling on an image using a specified window size and pooling function.
     
@@ -7,7 +7,7 @@ def pooling_image(image, window_size, func=np.mean, color_map='gray'):
     The pooled image is then returned and displayed with a specific colormap.
     
     Parameters:
-    image (ndarray): The input image as a 2D numpy array (grayscale) or a 3D numpy 
+    img (ndarray): The input image as a 2D numpy array (grayscale) or a 3D numpy 
                    array (RGB).
     
     window_size (int): The size of the pooling window (e.g., 10 for 10x10 windows). 
@@ -16,16 +16,13 @@ def pooling_image(image, window_size, func=np.mean, color_map='gray'):
                                 Common functions used are np.mean, np.median, np.max, np.min.
                                 Default is np.mean.
         
-    color_map (str, optional): The colormap to use for displaying the pooled image using matplotlib. 
-                               Examples include:'gray', 'inferno', 'virdis', 'plasma', etc.
-                               Default is `'gray'`.
     
     Returns:
-    matplotlib.image: The pooled image displayed with the specified colormap.
-    
+    ndarray: The resized image that was reshaped based off of respective pooling function and
+             window size.
     
     Examples:
     >>> img = np.random.rand(100, 100)
-    >>> pooled_img = pooling_image(image=img, window_size=10, func=np.mean, color_map='gray')
-    >>> pooled_img = pooling_image(image=img, window_size=20, func=np.max, color_map='viridis')
+    >>> pooled_img = pooling_image(img, window_size=10, func=np.mean)
+    >>> pooled_img = pooling_image(img_rgb, window_size=20, func=np.max)
     """
