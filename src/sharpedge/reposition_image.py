@@ -1,6 +1,6 @@
 def reposition_image(img, flip='none', rotate='up', shift_x=0, shift_y=0):
     """
-    Flip, rotate, and shift an image based on the specified modes.
+    Flip, rotate, and shift an image based on the specified requested action.
     
     This function allows repositioning of an image by applying one or more transformations 
     i.e. (flipping, rotating, and shifting). Each transformation can be controlled by the respective 
