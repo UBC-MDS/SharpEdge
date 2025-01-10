@@ -8,14 +8,14 @@ def energy(img):
 
     Parameters
     ----------
-    image : numpy.ndarray
+    img : numpy.ndarray
         A color image represented as a 3D numpy array of shape (height, width, 3).
 
     Returns
     -------
     numpy.ndarray
-        A new image where the pixels values represent the energy
-        of the corresponding pixel in the original image
+        A 2D array of shape (height, width) containing the energy values
+        for each pixel in the original image.
 
     Raises
     ------
@@ -92,12 +92,106 @@ def find_horizontal_seam(energy):
 
 
 def remove_vertical_seam(img, seam):
+    """
+    Remove a vertical seam from an image.
+
+    Parameters
+    ----------
+    img : numpy.ndarray
+        A 3D array representing the original image (height, width, 3).
+    seam : numpy.ndarray
+        A 1D array (or list) of column indices indicating
+        which pixel to remove in each row.
+
+    Returns
+    -------
+    numpy.ndarray
+        A new image with one less column, of shape (height, width - 1, 3).
+
+    Raises
+    ------
+    ValueError
+        - If the input img is not a 3D numpy array with 3 channels.
+        - If the input seam is not a 1D array or a list.
+        - If the length of the seam does not match the height of the image.
+
+    Examples
+    --------
+    >>> img = np.random.rand(8, 5, 3)
+    >>> seam = [2, 1, 3, 2, 0, 1, 4, 3]
+    >>> new_img = remove_vertical_seam(img, seam)
+    >>> print(new_img.shape)
+    (8, 4, 3)
+    """
     pass
 
 
 def remove_horizontal_seam(img, seam):
+    """
+    Remove a horizontal seam from an image.
+
+    Parameters
+    ----------
+    img : numpy.ndarray
+        A 3D array representing the original image (height, width, 3).
+    seam : numpy.ndarray
+        A 1D array (or list) of row indices indicating
+        which pixel to remove in each column.
+
+    Returns
+    -------
+    numpy.ndarray
+        A new image with one less row, of shape (height - 1, width, 3).
+
+    Raises
+    ------
+    ValueError
+        - If the input img is not a 3D numpy array with 3 channels.
+        - If the input seam is not a 1D array or a list.
+        - If the length of the seam does not match the width of the image.
+
+    Examples
+    --------
+    >>> img = np.random.rand(5, 8, 3)
+    >>> seam = [2, 1, 3, 2, 0, 1, 4, 3]
+    >>> new_img = remove_horizontal_seam(img, seam)
+    >>> print(new_img.shape)
+    (4, 8, 3)
+    """
     pass
 
 
 def seam_carve(img, target_height, target_width):
+    """
+    Seam carve an image to resize it to the target dimensions.
+
+    Parameters
+    ----------
+    img : numpy.ndarray
+        A 3D array representing the original image (height, width, 3).
+    target_height : int
+        The desired height of the resized image.
+    target_width : int
+        The desired width of the resized image.
+
+    Returns
+    -------
+    numpy.ndarray
+        The resized image with dimensions (target_height, target_width, 3).
+
+    Raises
+    ------
+    ValueError
+        - If the input img is not a 3D numpy array with 3 channels.
+        - If target_height or target_width is not an integer.
+        - If target_height is greater than the original height or less than 1.
+        - If target_width is greater than the original width or less than 1.
+
+    Examples
+    --------
+    >>> img = np.random.rand(5, 5, 3)
+    >>> resized_img = seam_carve(img, 3, 3)
+    >>> print(resized_img.shape)
+    (3, 3, 3)
+    """
     pass
