@@ -24,6 +24,13 @@ To harness the image processing magic of SharpEdge, follow these steps:
 
 2. Load your image as a NumPy array.
 3. Process your images using the available functions:
+   - Flip, rotate, and shift an image based on the specified requested action：
+
+        ```python
+        # Flip horizontally, rotate left, and shift the image
+        repositioned_img = reposition_image(img, flip='horizontal', rotate='left', shift_x=10, shift_y=20)
+        ```
+
    - Add a decorative frame around the image with customizable color:
 
         ```python
@@ -38,18 +45,18 @@ To harness the image processing magic of SharpEdge, follow these steps:
         grayscale_image = modulate_image(rgb_image, mode='gray')
         ```
 
-   - Compress the input image using Principal Component Analysis (PCA):
-
-        ```python
-        # Compress a grayscale image by retaining 80% of the variance
-        compressed_img = pca_compression(grayscale_img, preservation_rate=0.8)
-        ```
-
    - Perform pooling on an image using a specified window size and pooling function:
 
         ```python
         # Perform pooling on an image with mean pooling function
         pooled_img = pooling_image(img, window_size=10, func=np.mean)
+        ```
+
+   - Compress the input image using Principal Component Analysis (PCA):
+
+        ```python
+        # Compress a grayscale image by retaining 80% of the variance
+        compressed_img = pca_compression(grayscale_img, preservation_rate=0.8)
         ```
 
    - Resize the image using seam carving to the target dimensions:
