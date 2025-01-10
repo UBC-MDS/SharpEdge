@@ -2,6 +2,33 @@
 
 Collection of image processing tools and techniques, including padding, flipping, colorscale conversion, seam carving, and image shrinking. Designed for efficient manipulation and transformation of images.
 
+## Summary
+
+This package provides a comprehensive set of image processing utilities tailored for seamless integration of image manipulation projects. It includes essential tools for image transformations, seam carving, and processing. This package enables users to efficiently prepare, manipulate and modify image based on the needs of the user. The `sharpedge` package is valuable for users seeking tools for resizing and compressing images while maintaining visual content integrity.
+
+## Functions
+- **`reposition_image`**  
+  This function allows you to manipulate the position and orientation of an image by flipping, rotating, or shifting it. You can customize the actions based on your needs, such as horizontal flips, rotation to the left or right, or shifting the image along the X and Y axes.
+
+- **`frame_image`**  
+  Enhance the aesthetic of your image by adding a decorative frame around it. The frame can be customized with adjustable border sizes, placement inside or outside the image, and a specified color for the border.
+
+- **`modulate_image`**  
+  Modify the color channels of an image to achieve effects like grayscale conversion or specific channel isolation. This function is useful for color manipulation tasks, including transforming RGB images to simpler formats for analysis or artistic purposes.
+
+- **`pooling_image`**  
+  Apply pooling techniques to an image using a defined window size and a specified function, such as mean or max pooling. Pooling is commonly used to reduce image dimensions while preserving key features, making it especially relevant for preprocessing in computer vision tasks.
+
+- **`pca_compression`**  
+  Compress an image using Principal Component Analysis (PCA) by retaining only the most significant features while discarding less important data. This method is ideal for reducing file size while preserving a specified proportion of the original variance in the image.
+
+- **`seam_carve`**  
+  Resize an image intelligently using seam carving to preserve important content while adjusting dimensions. This technique minimizes distortion by removing or inserting paths of least importance, making it effective for content-aware resizing.
+
+## Where This Fits in the Python Ecosystem
+
+This package fits into the broader Python image ecosystem, along  with packages like [OpenCV](https://opencv.org/) and [Pillow](https://pillow.readthedocs.io/). While OpenCV and Pillow provide a wide range of general-purpose image processing tools, this package instead specializes in content-aware resizing and transformations, focusing on practical utilities for advanced image manipulations. Functions such as seam carving for resizing, PCA-based image compression, and pooling for dimensionality reduction offer unique capabilities that are not directly available in general-purpose libraries. 
+
 ## Installation
 
 ```bash
