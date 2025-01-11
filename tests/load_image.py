@@ -28,26 +28,3 @@ def load_image(path):
     (1280, 800, 3)
     """
     pass
-
-
-def display_image(img):
-    """
-    Display the numpy array as an image.
-
-    Parameters
-    ----------
-    img : numpy.ndarray
-        The image data as a numpy array
-        with shape (height, width, channels).
-
-    Raises
-    ------
-    ValueError
-        If the file is not a valid numpy array.
-
-    Examples
-    --------
-    >>> img = load_image('image.jpg')
-    >>> display_image(img)
-    """
-    pass
