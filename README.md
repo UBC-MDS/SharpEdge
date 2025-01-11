@@ -1,4 +1,4 @@
-# sharpedge
+# SharpEdge
 
 Collection of image processing tools and techniques, including padding, flipping, colorscale conversion, seam carving, and image shrinking. Designed for efficient manipulation and transformation of images.
 
@@ -51,6 +51,12 @@ To harness the image processing magic of SharpEdge, follow these steps:
     ```
 
 2. Load your image as a NumPy array.
+    
+      ```python
+      # Load an image from a specific path and convert it to a numpy array
+      img = load_image(img_path)
+      ```
+
 3. Process your images using the available functions:
    - Flip, rotate, and shift an image based on the specified requested action：
 
@@ -94,9 +100,16 @@ To harness the image processing magic of SharpEdge, follow these steps:
         resized_img = seam_carve(img, target_height=300, target_width=400)
         ```
 
+4. Display your modified image.
+    
+      ```python
+      # Display the numpy array as an image
+      display_image(repositioned_img)
+      ```
+      
 ## Contributors
 
-Archer Liu, Inder Khera, Hankun Xiao, Jenny Zhang (ordered alphabetically)
+Archer Liu, Hankun Xiao, Inder Khera, Jenny Zhang (ordered alphabetically)
 
 ## Contributing
 
