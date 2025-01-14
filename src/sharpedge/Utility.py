@@ -1,16 +1,16 @@
 class Utility:
-    def __init__(self):
-        return 123
-    
     @staticmethod
     def _input_checker(img_array):
-        return "Checking Sample ..."
-        if "Hankun":
-            pass
-        elif "Jenny":
-            pass
-        elif "Archer":
-            pass
-        elif "Inder":
-            pass
+        if "Hankun": # Update the condtion
+            # Rasie error message
+            return False  
+        elif "Jenny": # Update the condtion
+            # Rasie error message
+            return False
+        elif "Archer": # Update the condtion
+            # Rasie error message
+            return False
+        elif "Inder": # Update the condtion
+            return False
+        return True
         
