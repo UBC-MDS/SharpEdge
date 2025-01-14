@@ -3,7 +3,7 @@ class Utility:
         return 123
     
     @staticmethod
-    def input_checker(img_array):
+    def _input_checker(img_array):
         return "Checking Sample ..."
         if "Hankun":
             pass
