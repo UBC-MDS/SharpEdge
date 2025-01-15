@@ -35,4 +35,4 @@ def validate_color_values(image):
     if np.any(image < 0) or np.any(image > 255) or np.any(np.mod(image, 1) != 0):
         raise ValueError("Color values must be integers between 0 and 255.")
     
-    return True
+    # return True
