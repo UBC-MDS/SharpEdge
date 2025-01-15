@@ -1,8 +1,5 @@
-import os
-import sys
 import numpy as np
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from src.sharpedge._utils.utility import Utility
+from sharpedge._utils.utility import Utility
 
 
 # Part 1 of the input_checker: image format
