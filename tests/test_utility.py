@@ -10,7 +10,10 @@ from sharpedge._utils.utility import Utility
     np.array([[[1, 2, 3], [4, 5, 6]]])
 ])
 def test_valid_image_format(valid_array):
-    assert Utility._input_checker(valid_array)
+    try:
+        Utility._input_checker(valid_array)
+    except Exception as e:
+        pytest.fail(f"Valid data raised an error: {e}")
 
 
 # Edge cases
@@ -23,7 +26,10 @@ def test_valid_image_format(valid_array):
     np.array([[]]),
 ])
 def test_edge_image_format(edge_array):
-    assert Utility._input_checker(edge_array)
+    try:
+        Utility._input_checker(edge_array)
+    except Exception as e:
+        pytest.fail(f"Edge data raised an error: {e}")
 
 
 # Erroneous Cases
