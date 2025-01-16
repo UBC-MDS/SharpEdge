@@ -1,17 +1,17 @@
 import numpy as np
 import warnings
 
-def modulate_image(img, mode='gray', ch_extract=None, ch_swap=None):
+def modulate_image(img, mode='gray', ch_swap=None, ch_extract=None):
     """
     Convert or manipulate image color channels with flexibility for grayscale and RGB.
 
     This function allows you to perform various color transformations on an image, including:
     - Converting between grayscale and RGB formats.
-    - Extracting specific RGB channels (e.g., Red, Green, or Blue).
     - Swapping RGB channels to rearrange the color channels.
+    - Extracting specific RGB channels (e.g., Red, Green, or Blue).
     
     It supports both grayscale (2D) and RGB (3D) images. If a grayscale image is provided, 
-    channel extraction or swapping will not be applicable, and a notification will be given.
+    channel swapping or extraction will not be applicable, and a notification will be given.
 
     If the input image is already in the target mode (e.g., 'gray' or 'rgb'), the function will notify
     that no conversion is necessary and return the original image.
@@ -32,17 +32,6 @@ def modulate_image(img, mode='gray', ch_extract=None, ch_swap=None):
         If the input image is already in the target mode, a notification will be printed, and the 
         function will return the input image as-is without any conversion.
         
-    ch_extract : list/tuple of int, optional
-        A list or tuple of integers representing the indices of the RGB channels to extract. For example:
-        - `[0] or (0)`: Extract only the Red channel.
-        - `[1] or (1)`: Extract only the Green channel.
-        - `[2] or (2)`: Extract only the Blue channel.
-        
-        If `None`, no channel extraction occurs. Default is `None`.
-        
-        **Note**: This option is only applicable for RGB images. For grayscale images, extraction 
-        is not possible, and a notification will be displayed.
-
     ch_swap : list/tuple of int, optional
         A list or tuple of integers representing the new order of the RGB channels. The list should contain 
         exactly three elements, each of which is an index corresponding to the RGB channels:
@@ -53,6 +42,17 @@ def modulate_image(img, mode='gray', ch_extract=None, ch_swap=None):
         
         **Note**: This option is only applicable for RGB images. For grayscale images, swapping 
         channels is unnecessary, and a notification will be displayed.
+    
+    ch_extract : list/tuple of int, optional
+        A list or tuple of integers representing the indices of the RGB channels to extract. For example:
+        - `[0] or (0)`: Extract only the Red channel.
+        - `[1] or (1)`: Extract only the Green channel.
+        - `[2] or (2)`: Extract only the Blue channel.
+        
+        If `None`, no channel extraction occurs. Default is `None`.
+        
+        **Note**: This option is only applicable for RGB images. For grayscale images, extraction 
+        is not possible, and a notification will be displayed. 
 
     Returns
     -------
@@ -112,12 +112,12 @@ def modulate_image(img, mode='gray', ch_extract=None, ch_swap=None):
     # Convert grayscale to RGB if requested
     if mode == 'rgb' and len(img.shape) == 2:
         print("Converting grayscale to RGB...")
-        return np.stack([img] * 3, axis=-1)
+        img = np.stack([img] * 3, axis=-1)
 
     # Convert RGB to grayscale if requested
     if mode == 'gray' and len(img.shape) == 3:
         print("Converting RGB to grayscale...")
-        return np.mean(img, axis=-1)
+        img = np.mean(img, axis=-1)
 
     # Validate channel extraction when requested (only for RGB images)
     if ch_extract is not None:
