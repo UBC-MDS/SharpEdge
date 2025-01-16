@@ -19,7 +19,7 @@ def test_valid_img(valid_image):
 # Edge Cases:
 @pytest.mark.parametrize("edge_case_image", [
     (np.array([[[255, 0, 0]]], dtype=np.uint8)),  # Single-pixel RGB
-    (np.array([[128]], dtype=np.uint8))  # Single-pixel Grayscale
+    (np.array([[128]], dtype=np.uint8)),  # Single-pixel Grayscale
     (np.array([[[0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0]]], dtype=np.uint8)),  # RGB all zero
     (np.array([[[255, 255, 255], [255, 255, 255]], [[255, 255, 255], [255, 255, 255]]], dtype=np.uint8)),  # RGB all max
     (np.array([[0, 0], [0, 0]], dtype=np.uint8)),  # Grayscale all zero
@@ -35,15 +35,14 @@ def test_edge_values(edge_case_image):
 
 # Error Cases:
 @pytest.mark.parametrize("error_image, expected_exception", [
-    (np.array([[[255, 0, 0], [0, 256, 0]], [[0, 0, 255], [255, 255, 0]]], dtype=np.uint8), ValueError),  # RGB w/ 256 out of range
-    (np.array([[255, 128], [300, 0]], dtype=np.uint8), ValueError),  # Grayscale w/ 300 out of range
-    (np.array([[[-255, 0, 0], [0, -255, 0]], [[0, 0, 255], [255, 255, 0]]], dtype=np.uint8), ValueError),  # RGB w/ negative values
-    (np.array([[-255, -128], [-255, 0]], dtype=np.uint8), ValueError),  # Grayscale w/ negative values
+    (np.array([[[255, 0, 0], [0, 256, 0]], [[0, 0, 255], [255, 255, 0]]]), ValueError),  # RGB w/ 256 out of range
+    (np.array([[255, 128], [300, 0]]), ValueError),  # Grayscale w/ 300 out of range
+    (np.array([[[-255, 0, 0], [0, -255, 0]], [[0, 0, 255], [255, 255, 0]]]), ValueError),  # RGB w/ negative values
+    (np.array([[-255, -128], [-255, 0]]), ValueError),  # Grayscale w/ negative values
     (np.array([[[255.5, 0.0, 0.0], [0.0, 255.5, 0.0]], [[0.0, 0.0, 255.5], [255.5, 255.5, 0.0]]]), ValueError),  # RGB floats present
     (np.array([[255.5, 128], [64.2, 0]], dtype=np.float32), ValueError),  # Grayscale floats present
-    (np.array([[[255, 0, 0], [0, np.nan, 0]], [[0, 0, 255], [255, 255, 0]]], dtype=np.uint8), ValueError),  # RGB NaN values
-    (np.array([[np.nan, 128], [64, 0]], dtype=np.float32), ValueError),  # Grayscale NaN values
-    (np.array([]), ValueError)  # Empty image, can be removed upon Part 3 being properly tested
+    (np.array([[[255, 0, 0], [0, np.nan, 0]], [[0, 0, 255], [255, 255, 0]]]), ValueError),  # RGB NaN values
+    (np.array([[np.nan, 128], [64, 0]]), ValueError),  # Grayscale NaN values
 ])
 def test_invalid_cases(error_image, expected_exception):
     with pytest.raises(expected_exception, match="Color values must be integers between 0 and 255."):

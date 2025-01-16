@@ -18,5 +18,5 @@ class Utility:
     def _input_checker(img_array):
     ## Part 4 of the input_checker: data color range
     # Check if any values are out of range (0 to 255) or floats
-    if np.any(img_array < 0) or np.any(img_array > 255) or np.any(np.mod(img_array, 1) != 0):
-        raise ValueError("Color values must be integers between 0 and 255.")
+        if np.any(img_array < 0) or np.any(img_array > 255) or np.any(np.mod(img_array, 1) != 0):
+            raise ValueError("Color values must be integers between 0 and 255.")
