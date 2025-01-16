@@ -28,6 +28,15 @@ def frame_image(img, h_border=20, w_border=20, inside=False, color=0):
     >>> framed_img = frame_image(img, h_border=30, w_border=30, inside=True, color=255)
     >>> framed_img_rgb = frame_image(img_rgb, h_border=20, w_border=20, inside=False, color=(255, 0, 0))
     """
+    # Check the *_border inputs are correct
+    # Check if h_border and w_border are integers
+    if not isinstance(h_border, int) or not isinstance(w_border, int):
+        raise TypeError(f"Both h_border and w_border must be integers.")
+
+    # Check if borders are non-negative
+    if h_border < 0 or w_border < 0:
+        raise ValueError("Both h_border and w_border must be non-negative integers.")
+
     # Check that the color input is correct for grayscale or RGB image
     if isinstance(color, (tuple, list)):
         if len(color) != 3:
@@ -42,7 +51,10 @@ def frame_image(img, h_border=20, w_border=20, inside=False, color=0):
             raise ValueError("For grayscale frames, color must be an integer in the range 0 to 255.")
     else:
         raise TypeError("Color must be either an integer for grayscale frames or a tuple/list of 3 integers for RGB frames.")
-    
+
+    # Check for relationship between image size and border size
+    if inside and (img.shape[0] <= 2 * h_border or img.shape[1] <= 2 * w_border):
+        raise ValueError("The inside border is too large for this small image. The image cannot be processed.")
     
     if isinstance(color, tuple) or isinstance(color, list):
         # For RGB images, ensure the color is in the correct shape
