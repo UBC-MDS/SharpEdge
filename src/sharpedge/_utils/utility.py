@@ -13,7 +13,7 @@ class Utility:
             raise ValueError("Image array must be 2D or 3D.")
         
         # If all checks pass, return None to indicate no error
-        return None
+        
 
 
         
