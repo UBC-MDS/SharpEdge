@@ -8,6 +8,10 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
+numpy = "^2.2.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
 
 [tool.semantic_release]
 version_toml = [
