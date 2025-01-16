@@ -4,22 +4,26 @@ import warnings
 from sharpedge.modulate_image import modulate_image
 
 @pytest.fixture
-def sample_images():
+def img_rgb():
     # Create sample images for testing
-    img_rgb_5 = np.random.randint(0, 256, (5, 5, 3), dtype=np.uint8)  # RGB image (5x5) with 3 channels
-    img_gray_5 = np.random.randint(0, 256, (5, 5), dtype=np.uint8)  # Grayscale image (5x5)
-    img_rgb_10_5 = np.random.randint(0, 256, (10, 5, 3), dtype=np.uint8)  # RGB image (10x5) with 3 channels
-    img_gray_10_5 = np.random.randint(0, 256, (10, 5), dtype=np.uint8)  # Grayscale image (10x5)
-    return img_rgb_5, img_gray_5, img_rgb_10_5, img_gray_10_5
+    img_rgb = np.random.randint(0, 256, (5, 5, 3), dtype=np.uint8)  # RGB image (5x5) with 3 channels
+    return img_rgb
+
+@pytest.fixture
+def img_gray():
+    # Create sample images for testing
+    img_gray = np.random.randint(0, 256, (5, 5), dtype=np.uint8)  # Grayscale image (5x5)
+    return img_gray
 
 # Expected Test Cases:
 @pytest.mark.parametrize(
     "test_img, mode, ch_swap, ch_extract, expected_shape",
     [
-        (img_gray_10_5, 'rgb', None, None, (10, 5, 3)),  # Grayscale image (10x5) to RGB
-        (img_rgb_10_5, 'gray', None, None, (10, 5)),  # RGB image (10x5) to grayscale
-        (img_gray_5, 'rgb', [2, 1, 0], None, (5, 5, 3)),  # RGB image (5x5) to RGB
-        (img_rgb_5, 'gray', (5, 5)),  # Grayscale image (5x5) to grayscale
+        (img_gray, 'rgb', None, None, (5, 5, 3)),  # Grayscale image (10x5) to RGB
+        (img_rgb, 'gray', None, None, (5, 5)),  # RGB image (10x5) to grayscale
+        (img_gray, 'rgb', [2, 1, 0], None, (5, 5, 3)),  # RGB swap Red and Blue channels
+        (img_rgb, 'rgb', None, [0, 1] (5, 5, 2)),  # RGB extract Red and Green channels
+        (img_gray, 'rgb', [2, 1, 0], [0, 1], (5, 5, 2)),  # RGB swap and extract combined
     ]
 )
 def test_valid_inputs(test_img, mode, expected_shape):
