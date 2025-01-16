@@ -67,7 +67,7 @@ def frame_image(img, h_border=20, w_border=20, inside=False, color=0):
         if img.shape[0] <= 2 * h_border or img.shape[1] <= 2 * w_border:
             raise ValueError("The inside border is too large for this small image. The image cannot be processed.")
         # Warning: when the inside border is greater than 50% of image size
-        elif 2 * h_border > 0.5 * img.shape[0] or 2 * w_border > 0.5 * img.shape[1]:
+        elif (2 * h_border > 0.5 * img.shape[0]) or (2 * w_border > 0.5 * img.shape[1]):
             warnings.warn("The inside border exceeds 50% image size and may shrink the image significantly.", UserWarning)
         
     # Warning: when single side outside border is larger than the image dimensions
