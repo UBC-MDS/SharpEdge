@@ -15,4 +15,4 @@ class Utility:
             raise ValueError(
             f"Invalid image shape: {img_array.shape}. "
             "Expected 2D (grayscale) or 3D with 3 channels (RGB)."
-        )
+            )
