@@ -1,13 +1,13 @@
 import pytest
 import numpy as np
-from frame_image import frame_image  # TO BE UPDATED
+from sharpedge.frame_image import frame_image  
 
 # Expected Test Cases:
 @pytest.mark.parametrize("valid_img, h_border, w_border, inside, color, expected_size", [
-    (np.random.randint(0, 255, (100, 100)), None, None, None, None, (140, 140)),  # Grayscale, outside black 20 x 20 border    
-    (np.random.randint(0, 255, (100, 100, 3)), None, None, None, (255, 0, 0), (140, 140, 3)),  # RGB, outside 20 x 20 red border
-    (np.random.randint(0, 255, (100, 100)), 10, 10, True, 255, (100, 100)),  # Grayscale, inside 10 x 10 white border
-    (np.random.randint(0, 255, (100, 100, 3)), 15, 10, True, (0, 255, 0), (100, 100, 3)),  # RGB, inside 15 x 10 green border
+    (np.random.randint(0, 256, (100, 100)), 20, 20, False, 0, (140, 140, 3)),  # Grayscale, outside black 20 x 20 border    
+    (np.random.randint(0, 256, (100, 100, 3)), 20, 20, False, (255, 0, 0), (140, 140, 3)),  # RGB, outside 20 x 20 red border
+    (np.random.randint(0, 256, (100, 100)), 10, 10, True, 255, (100, 100, 3)),  # Grayscale, inside 10 x 10 white border
+    (np.random.randint(0, 256, (100, 100, 3)), 15, 10, True, (0, 255, 0), (100, 100, 3)),  # RGB, inside 15 x 10 green border
 ])
 def test_valid_inputs(valid_img, h_border, w_border, inside, color, expected_size):
     framed_img = frame_image(valid_img, h_border=h_border, w_border=w_border, inside=inside, color=color)
@@ -32,21 +32,21 @@ def warn_msg():
 
 @pytest.mark.parametrize("img_shape, h_border, w_border, inside, expected_shape, expected_warning, msg", [
     # Test case 1: Single Pixel Image
-    (np.array([[0]]), 1, 1, None, (3, 3), UserWarning, COMMON_WARN["user_warn_img"]),  # Expecting a 3x3 image (outside border)
-    (np.array([[[0, 255, 0]]]), 1, 1, None, (3, 3, 3), UserWarning, COMMON_WARN["user_warn_img"]),  # Expecting a 3x3x3 image (outside border)
+    (np.array([[0]]), 1, 1, False, (3, 3, 3), UserWarning, COMMON_WARN["user_warn_img"]),  # Expecting a 3x3 image (outside border)
+    (np.array([[[0, 255, 0]]]), 1, 1, False, (3, 3, 3), UserWarning, COMMON_WARN["user_warn_img"]),  # Expecting a 3x3x3 image (outside border)
     
     # Test case 2: Minimum Border Size 
-    (np.random.randint(0, 255, (100, 100)), 0, 0, None, (100, 100), UserWarning, COMMON_WARN["user_warn_zero"]),  # No border, original size
-    (np.random.randint(0, 255, (100, 100, 3)), 0, 0, True, (100, 100, 3), UserWarning, COMMON_WARN["user_warn_zero"]),  # No border, original size (100x100 with 3 channels)
-    (np.random.randint(0, 255, (100, 100, 3)), 0, 20, True, (100, 100, 3), UserWarning, COMMON_WARN["user_warn_zero"]),  # No height border, original size on height (100x140 with 3 channels)
+    (np.random.randint(0, 256, (100, 100)), 0, 0, False, (100, 100, 3), UserWarning, COMMON_WARN["user_warn_zero"]),  # No border, original size
+    (np.random.randint(0, 256, (100, 100, 3)), 0, 0, True, (100, 100, 3), UserWarning, COMMON_WARN["user_warn_zero"]),  # No border, original size (100x100 with 3 channels)
+    (np.random.randint(0, 256, (100, 100, 3)), 0, 20, True, (100, 100, 3), UserWarning, COMMON_WARN["user_warn_zero"]),  # No height border, original size on height (100x140 with 3 channels)
     
     # Test case 3: Large Outside Border
-    (np.random.randint(0, 255, (100, 100)), 200, 200, None, (500, 500), UserWarning, COMMON_WARN["user_warn_outside"]),  # Explicit border size, expect 500x500
-    (np.random.randint(0, 255, (100, 100, 3)), 200, 200, None, (500, 500, 3), UserWarning, COMMON_WARN["user_warn_outside"]),  # Valid border, expect 500x500 with 3 channels
+    (np.random.randint(0, 256, (100, 100)), 200, 200, False, (500, 500, 3), UserWarning, COMMON_WARN["user_warn_outside"]),  # Explicit border size, expect 500x500
+    (np.random.randint(0, 256, (100, 100, 3)), 200, 200, False, (500, 500, 3), UserWarning, COMMON_WARN["user_warn_outside"]),  # Valid border, expect 500x500 with 3 channels
     
     # Test case 4: Very Small Image with Large Inside Border 
-    (np.random.randint(0, 255, (5, 5)), 1, 1, True, (3, 3), UserWarning, COMMON_WARN["user_warn_inside"]),  # Large inside border, expect 3x3 image
-    (np.random.randint(0, 255, (10, 10, 3)), 3, 3, True, (4, 4, 3), UserWarning, COMMON_WARN["user_warn_inside"]),  # Large inside border, expect 3x3 image with 3 channels
+    (np.random.randint(0, 256, (5, 5)), 1, 1, True, (3, 3, 3), UserWarning, COMMON_WARN["user_warn_inside"]),  # Large inside border, expect 3x3 image
+    (np.random.randint(0, 256, (10, 10, 3)), 3, 3, True, (4, 4, 3), UserWarning, COMMON_WARN["user_warn_inside"]),  # Large inside border, expect 3x3 image with 3 channels
 ])
 def test_edge_cases(img_shape, h_border, w_border, inside, expected_shape, expected_warning, msg):
     """
@@ -83,49 +83,49 @@ def error_description():
 @pytest.mark.parametrize("img_shape, color, h_border, w_border, inside, expected_exception, description", [
     # Category I: Invalid `color` Argument
     # 1. Invalid `color` format
-    (np.random.randint(0, 255, (5, 5)), "red", 20, 20, False, TypeError, COMMON_DESC["type_err_oth"]),  
-    (np.random.randint(0, 255, (5, 5, 3)), (255, '255', 0), 20, 20, False, TypeError, COMMON_DESC["type_err_oth"]), 
-    (np.random.randint(0, 255, (5, 5, 3)), np.array([255, 0, 0]), 20, 20, False, TypeError, COMMON_DESC["type_err_oth"]),   
+    (np.random.randint(0, 256, (5, 5)), "red", 20, 20, False, TypeError, COMMON_DESC["type_err_oth"]),  
+    (np.random.randint(0, 256, (5, 5, 3)), (255, '255', 0), 20, 20, False, TypeError, COMMON_DESC["type_err_oth"]), 
+    (np.random.randint(0, 256, (5, 5, 3)), np.array([255, 0, 0]), 20, 20, False, TypeError, COMMON_DESC["type_err_oth"]),   
 
     # 2. Missing or redundant `color` channels
-    (np.random.randint(0, 255, (5, 5)), (255, 0), 2, 2, False, ValueError, COMMON_DESC["value_err_rgb"]),  
-    (np.random.randint(0, 255, (5, 5, 3)), (255, 0), 2, 2, False, ValueError, COMMON_DESC["value_err_rgb"]),  
-    (np.random.randint(0, 255, (5, 5)), (255, 0, 0, 0), 2, 2, False, ValueError, COMMON_DESC["value_err_rgb"]),  
-    (np.random.randint(0, 255, (5, 5, 3)), (255, 0, 0, 0), 2, 2, False, ValueError, COMMON_DESC["value_err_rgb"]),  
+    (np.random.randint(0, 256, (5, 5)), (255, 0), 2, 2, False, ValueError, COMMON_DESC["value_err_rgb"]),  
+    (np.random.randint(0, 256, (5, 5, 3)), (255, 0), 2, 2, False, ValueError, COMMON_DESC["value_err_rgb"]),  
+    (np.random.randint(0, 256, (5, 5)), (255, 0, 0, 0), 2, 2, False, ValueError, COMMON_DESC["value_err_rgb"]),  
+    (np.random.randint(0, 256, (5, 5, 3)), (255, 0, 0, 0), 2, 2, False, ValueError, COMMON_DESC["value_err_rgb"]),  
 
     # 3. Unsupported `color` data type
-    (np.random.randint(0, 255, (5, 5)), (111.1, 111.1, 0), 20, 20, False, TypeError, COMMON_DESC["type_err_int"]),  
-    (np.random.randint(0, 255, (5, 5, 3)), (111.1, 111.1, 0), 20, 20, False, TypeError, COMMON_DESC["type_err_int"]),  
-    (np.random.randint(0, 255, (5, 5)), 3.5, 20, 20, False, TypeError, COMMON_DESC["type_err_oth"]),  
-    (np.random.randint(0, 255, (5, 5, 3)), 3.5, 20, 20, False, TypeError, COMMON_DESC["type_err_oth"]),  
+    (np.random.randint(0, 256, (5, 5)), (111.1, 111.1, 0), 20, 20, False, TypeError, COMMON_DESC["type_err_int"]),  
+    (np.random.randint(0, 256, (5, 5, 3)), (111.1, 111.1, 0), 20, 20, False, TypeError, COMMON_DESC["type_err_int"]),  
+    (np.random.randint(0, 256, (5, 5)), 3.5, 20, 20, False, TypeError, COMMON_DESC["type_err_oth"]),  
+    (np.random.randint(0, 256, (5, 5, 3)), 3.5, 20, 20, False, TypeError, COMMON_DESC["type_err_oth"]),  
 
     # 4. Out-of-range `color` values
-    (np.random.randint(0, 255, (5, 5)), (-1, 255, 0), 20, 20, False, ValueError, COMMON_DESC["value_err_gs"]),  
-    (np.random.randint(0, 255, (5, 5)), 256, 20, 20, False, ValueError, COMMON_DESC["value_err_gs"]),  
-    (np.random.randint(0, 255, (5, 5, 3)), (255, 256, 0), 20, 20, False, ValueError, COMMON_DESC["value_err_rgb"]), 
-    (np.random.randint(0, 255, (5, 5, 3)), 256, 20, 20, False, ValueError, COMMON_DESC["value_err_rgb"]),  
+    (np.random.randint(0, 256, (5, 5)), (-1, 255, 0), 20, 20, False, ValueError, COMMON_DESC["value_err_gs"]),  
+    (np.random.randint(0, 256, (5, 5)), 256, 20, 20, False, ValueError, COMMON_DESC["value_err_gs"]),  
+    (np.random.randint(0, 256, (5, 5, 3)), (255, 256, 0), 20, 20, False, ValueError, COMMON_DESC["value_err_rgb"]), 
+    (np.random.randint(0, 256, (5, 5, 3)), 256, 20, 20, False, ValueError, COMMON_DESC["value_err_rgb"]),  
 
 
     # Category II: Too Large Inside Border Size
     # 5. Too large inside border (grayscale and RGB) - image too small
-    (np.random.randint(0, 255, (5, 5)), None, 20, 20, True, ValueError, COMMON_DESC["value_err_rel"]),   
-    (np.random.randint(0, 255, (10, 10, 3)), 20, 20, True, ValueError, COMMON_DESC["value_err_rel"]),  
+    (np.random.randint(0, 256, (5, 5)), 0, 20, 20, True, ValueError, COMMON_DESC["value_err_rel"]),   
+    (np.random.randint(0, 256, (10, 10, 3)), 0, 20, 20, True, ValueError, COMMON_DESC["value_err_rel"]),  
 
 
     # Category III: Invalid `h_border` and `w_border` Arguments
     # 6. Invalid `*_border` format
-    (np.random.randint(0, 255, (5, 5)), "20", "20", False, TypeError, COMMON_DESC["type_err_border"]),  
-    (np.random.randint(0, 255, (5, 5, 3)), (20), (20), False, TypeError, COMMON_DESC["type_err_border"]),  
-    (np.random.randint(0, 255, (5, 5)), [20], [20], False, TypeError, COMMON_DESC["type_err_border"]),  
-    (np.random.randint(0, 255, (5, 5, 3)), [], [], False, TypeError, COMMON_DESC["type_err_border"]),  
+    (np.random.randint(0, 256, (5, 5)), 0, "20", "20", False, TypeError, COMMON_DESC["type_err_border"]),  
+    (np.random.randint(0, 256, (5, 5, 3)), 0, (20), 20, False, TypeError, COMMON_DESC["type_err_border"]),  
+    (np.random.randint(0, 256, (5, 5)), 0, 20, [20], False, TypeError, COMMON_DESC["type_err_border"]),  
+    (np.random.randint(0, 256, (5, 5, 3)), 0, [], [], False, TypeError, COMMON_DESC["type_err_border"]),  
 
     # 7. Unsupported `*_border` data type
-    (np.random.randint(0, 255, (5, 5)), 3.5, 3.5, False, TypeError, COMMON_DESC["type_err_border"]),  
-    (np.random.randint(0, 255, (5, 5, 3)), 3.5, 3.5, False, TypeError, COMMON_DESC["type_err_border"]),  
+    (np.random.randint(0, 256, (5, 5)), 0, 3.5, 3.5, False, TypeError, COMMON_DESC["type_err_border"]),  
+    (np.random.randint(0, 256, (5, 5, 3)), 0, 3.5, 3.5, False, TypeError, COMMON_DESC["type_err_border"]),  
 
     # 8. Out-of-range `*_border` values
-    (np.random.randint(0, 255, (5, 5)), -1, -1, False, ValueError, COMMON_DESC["value_err_border"]),  
-    (np.random.randint(0, 255, (5, 5, 3)), -1, -1, False, ValueError, COMMON_DESC["value_err_border"]),  
+    (np.random.randint(0, 256, (5, 5)), 0, -1, -1, False, ValueError, COMMON_DESC["value_err_border"]),  
+    (np.random.randint(0, 256, (5, 5, 3)), 0, -1, -1, False, ValueError, COMMON_DESC["value_err_border"]),  
 ])
 def test_error_cases(img_shape, color, h_border, w_border, inside, expected_exception, description):
     """
