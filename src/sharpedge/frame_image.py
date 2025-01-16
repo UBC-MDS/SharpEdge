@@ -35,16 +35,16 @@ def frame_image(img, h_border=20, w_border=20, inside=False, color=0):
     if img.shape[0] < 3 or img.shape[1] < 3:
         warnings.warn("The image is too small for meaningful visual information. Proceeding may not yield interpretable results.", UserWarning)
     
+    # Warning: when any border size is 0
+    if h_border == 0 or w_border == 0:
+        warnings.warn("Border size of 0 doesn't add any visual effect to the image.", UserWarning)
+      
     # Check the *_border inputs are correct: integers and non-negative
     if not isinstance(h_border, int) or not isinstance(w_border, int):
         raise TypeError("Both h_border and w_border must be integers.")
 
     if h_border < 0 or w_border < 0:
         raise ValueError("Both h_border and w_border must be non-negative integers.")
-       
-    # Warning: when any border size is 0
-    if h_border == 0 or w_border == 0:
-        warnings.warn("Border size of 0 doesn't add any visual effect to the image.", UserWarning)
     
     # Check that the color input is correct for grayscale or RGB image
     if isinstance(color, (tuple, list)):
