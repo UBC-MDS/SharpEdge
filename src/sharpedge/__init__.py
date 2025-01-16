@@ -1,9 +1,5 @@
 # read version from installed package
-from importlib.metadata import version, PackageNotFoundError
-
-try:
-    __version__ = version("sharpedge")
-except PackageNotFoundError:
-    __version__ = "0.0.0"  
+from importlib.metadata import version
+__version__ = version("sharpedge")
 
 
