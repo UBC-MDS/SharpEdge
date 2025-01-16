@@ -74,19 +74,44 @@ def frame_image(img, h_border=20, w_border=20, inside=False, color=0):
     if not inside and (h_border >= img.shape[0] or w_border >= img.shape[1]):
         warnings.warn("Single side border size exceeds image size.", UserWarning)
 
-    if isinstance(color, tuple) or isinstance(color, list):
-        # For RGB images, ensure the color is in the correct shape
-        color = np.array(color, dtype=img.dtype)
+    # Convert `color` grayscale integer to same RGB tuple
+    if isinstance(color, int):
+        color = (color, color, color)
     
+    # Represent grayscale image in 3-channel image format
+    if img.ndim == 2:  # Grayscale image (2D)
+        # Convert grayscale to RGB by repeating the grayscale values across 3 channels
+        img = np.stack([img] * 3, axis=-1)
+
+    # Handle slicing for inside padding (keeping size constant)
     if inside:
-        # Add border within the image (keeping size constant)
-        framed_img = np.pad(img[h_border:-h_border, w_border:-w_border],
-                            ((h_border, h_border), (w_border, w_border)),
-                            'constant', constant_values=color)
-    else:
-        # Add border outside the image (increasing size)
-        framed_img = np.pad(img,
-                            ((h_border, h_border), (w_border, w_border)),
-                            'constant', constant_values=color)
+        img = img[h_border:-h_border or None, w_border:-w_border or None, :]
+    
+    # Apply padding for both grayscale (converted to RGB) and RGB images
+    framed_img = np.pad(img, ((h_border, h_border), (w_border, w_border), (0, 0)), 'constant', 
+                        constant_values=((color[0], color[0]), (color[1], color[1]), (color[2], color[2])))
+    
+    # # Apply padding
+    # if img.ndim == 2:  # Grayscale image (2D)
+    #     framed_img = np.pad(img, ((h_border, h_border), (w_border, w_border)), 
+    #                         'constant', constant_values=color)
+    # elif img.ndim == 3:  # Color image (3D)
+    #     framed_img = np.pad(img, ((h_border, h_border), (w_border, w_border), (0, 0)), 
+    #                         'constant', constant_values=color)
+    
+    # if isinstance(color, tuple) or isinstance(color, list):
+    #     # For RGB images, ensure the color is in the correct shape
+    #     color = np.array(color, dtype=img.dtype)
+    
+    # if inside:
+    #     # Add border within the image (keeping size constant)
+    #     framed_img = np.pad(img[h_border:-h_border, w_border:-w_border],
+    #                         ((h_border, h_border), (w_border, w_border)),
+    #                         'constant', constant_values=color)
+    # else:
+    #     # Add border outside the image (increasing size)
+    #     framed_img = np.pad(img,
+    #                         ((h_border, h_border), (w_border, w_border)),
+    #                         'constant', constant_values=color)
 
     return framed_img
