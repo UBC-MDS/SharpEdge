@@ -72,7 +72,7 @@ def frame_image(img, h_border=20, w_border=20, inside=False, color=0):
         
     # Warning: when single side outside border is larger than the image dimensions
     if not inside and (h_border >= img.shape[0] or w_border >= img.shape[1]):
-        warnings.warn(f"Single side border size exceeds image size", UserWarning)
+        warnings.warn("Single side border size exceeds image size.", UserWarning)
 
     if isinstance(color, tuple) or isinstance(color, list):
         # For RGB images, ensure the color is in the correct shape
