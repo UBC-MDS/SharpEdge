@@ -1,3 +1,6 @@
+import numpy as np
+import warnings
+
 def modulate_image(img, mode='gray', ch_extract=None, ch_swap=None):
     """
     Convert or manipulate image color channels with flexibility for grayscale and RGB.
@@ -29,22 +32,22 @@ def modulate_image(img, mode='gray', ch_extract=None, ch_swap=None):
         If the input image is already in the target mode, a notification will be printed, and the 
         function will return the input image as-is without any conversion.
         
-    ch_extract : list of int, optional
-        A list of integers representing the indices of the RGB channels to extract. For example:
-        - `[0]`: Extract only the Red channel.
-        - `[1]`: Extract only the Green channel.
-        - `[2]`: Extract only the Blue channel.
+    ch_extract : list/tuple of int, optional
+        A list or tuple of integers representing the indices of the RGB channels to extract. For example:
+        - `[0] or (0)`: Extract only the Red channel.
+        - `[1] or (1)`: Extract only the Green channel.
+        - `[2] or (2)`: Extract only the Blue channel.
         
         If `None`, no channel extraction occurs. Default is `None`.
         
         **Note**: This option is only applicable for RGB images. For grayscale images, extraction 
         is not possible, and a notification will be displayed.
 
-    ch_swap : list of int, optional
-        A list of integers representing the new order of the RGB channels. The list should contain 
+    ch_swap : list/tuple of int, optional
+        A list or tuple of integers representing the new order of the RGB channels. The list should contain 
         exactly three elements, each of which is an index corresponding to the RGB channels:
-        - `[0, 1, 2]` will keep the channels in their original order (Red, Green, Blue).
-        - `[2, 1, 0]` will swap Red and Blue channels.
+        - `[0, 1, 2] or (0, 1, 2)` will keep the channels in their original order (Red, Green, Blue).
+        - `[2, 1, 0] or (2, 1, 0)` will swap Red and Blue channels.
         
         If `None`, no channel swapping occurs. Default is `None`.
         
@@ -90,6 +93,75 @@ def modulate_image(img, mode='gray', ch_extract=None, ch_swap=None):
     red_green_channels = modulate_image(rgb_image, ch_extract=[0, 1])
 
     # Swap the Red and Blue channels in an RGB image
-    swapped_image = modulate_image(rgb_image, ch_swap=[2, 0, 1])
+    swapped_image = modulate_image(rgb_image, ch_swap=(2, 0, 1))
     
     """
+
+    # Validate 'mode' input
+    if mode not in ['gray', 'rgb']:
+        raise ValueError(f"Invalid mode '{mode}'. Mode must be either 'gray' or 'rgb'.")
+
+    # Handle grayscale mode (2D array) and RGB mode (3D array)
+    if mode == 'gray' and len(img.shape) == 2:
+        warnings.warn("Input is already grayscale. No conversion needed.", UserWarning)
+        return img
+    if mode == 'rgb' and len(img.shape) == 3:
+        warnings.warn("Input is already RGB. No conversion needed.", UserWarning)
+        return img
+
+    # Convert grayscale to RGB if requested
+    if mode == 'rgb' and len(img.shape) == 2:
+        print("Converting grayscale to RGB...")
+        return np.stack([img] * 3, axis=-1)
+
+    # Convert RGB to grayscale if requested
+    if mode == 'gray' and len(img.shape) == 3:
+        print("Converting RGB to grayscale...")
+        return np.mean(img, axis=-1)
+
+    # Validate channel extraction when requested (only for RGB images)
+    if ch_extract is not None:
+        if len(img.shape) == 2:
+            warnings.warn("Grayscale images have no channels to extract.", UserWarning)
+            return img  # No channel extraction for grayscale
+        
+        # Validate ch_extract: should be a list or tuple of 0, 1, or 2, with no duplicates
+        if not isinstance(ch_extract, (list, tuple)):
+            raise TypeError("ch_extract must be a list or tuple.")
+        
+        if not all(isinstance(ch, int) for ch in ch_extract):
+            raise TypeError("All elements in ch_extract must be integers.")
+        
+        if not all(ch in [0, 1, 2] for ch in ch_extract):
+            raise ValueError("Invalid channel indices. Only 0, 1, or 2 are valid.")
+        
+        if len(set(ch_extract)) != len(ch_extract):
+            raise ValueError("ch_extract contains duplicate channel indices.")
+        
+        # Handle channel extraction 
+        return img[..., ch_extract]
+
+    # Validate channel swapping when requested (only for RGB images)
+    if ch_swap is not None:
+        if len(img.shape) == 2:
+            warnings.warn("Grayscale images have no channels to swap.", UserWarning)
+            return img  # No channel swapping for grayscale
+        
+        # Validate ch_swap: must be a list or tuple of 3 integers, with no duplicates, and must include all 0, 1, 2
+        if not isinstance(ch_swap, (list, tuple)):
+            raise TypeError(f"ch_swap must be a list or tuple, got {type(ch_swap)}.")
+        
+        if not all(isinstance(ch, int) for ch in ch_swap):
+            raise TypeError("All elements in ch_swap must be integers.")
+        
+        if len(ch_swap) != 3 or not all(ch in [0, 1, 2] for ch in ch_swap):
+            raise ValueError("ch_swap must be three elements of valid RGB channel indices 0, 1, or 2.")
+        
+        if len(set(ch_swap)) != 3:
+            raise ValueError("ch_swap must include all channels 0, 1, and 2 exactly once.")
+
+        # Handle channel swapping
+        return img[..., ch_swap]
+
+    # If no operation is requested, return the original image
+    return img
