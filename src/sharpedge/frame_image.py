@@ -31,7 +31,7 @@ def frame_image(img, h_border=20, w_border=20, inside=False, color=0):
     # Check the *_border inputs are correct
     # Check if h_border and w_border are integers
     if not isinstance(h_border, int) or not isinstance(w_border, int):
-        raise TypeError(f"Both h_border and w_border must be integers.")
+        raise TypeError("Both h_border and w_border must be integers.")
 
     # Check if borders are non-negative
     if h_border < 0 or w_border < 0:
