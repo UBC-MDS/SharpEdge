@@ -15,36 +15,52 @@ def test_valid_inputs(valid_img, h_border, w_border, inside, color, expected_siz
 
 
 # Edge Cases: 
-@pytest.mark.parametrize("img_shape, h_border, w_border, inside, expected_shape", [
+# Common warnings that will be reused
+COMMON_WARN = {
+    "user_warn_img": "The image is too small for meaningful visual information. Proceeding may not yield interpretable results.",
+    "user_warn_zero": "Border size of 0 doesn't add any visual effect to the image.",
+    "user_warn_inside": "The inside border exceeds 50% image size and may shrink the image significantly.",
+    "user_warn_outside": "Single side border size exceeds image size."
+}
+
+@pytest.fixture
+def warn_msg():
+    """
+    Provides the common warnings for the edge test cases.
+    """
+    return COMMON_WARN
+
+@pytest.mark.parametrize("img_shape, h_border, w_border, inside, expected_shape, expected_warning, msg", [
     # Test case 1: Single Pixel Image
-    (np.array([[0]]), 1, 1, None, (3, 3)),  # Expecting a 3x3 image (outside border)
-    (np.array([[[0, 255, 0]]]), 1, 1, None, (3, 3, 3)),  # Expecting a 3x3x3 image (outside border)
+    (np.array([[0]]), 1, 1, None, (3, 3), UserWarning, COMMON_WARN["user_warn_img"]),  # Expecting a 3x3 image (outside border)
+    (np.array([[[0, 255, 0]]]), 1, 1, None, (3, 3, 3), UserWarning, COMMON_WARN["user_warn_img"]),  # Expecting a 3x3x3 image (outside border)
     
     # Test case 2: Minimum Border Size 
-    (np.random.rand(100, 100), 0, 0, None, (100, 100)),  # No border, original size
-    (np.random.rand(100, 100, 3), 0, 0, True, (100, 100, 3)),  # No border, original size (100x100 with 3 channels)
-    (np.random.rand(100, 100, 3), 0, 20, True, (100, 100, 3)),  # No height border, original size on height (100x140 with 3 channels)
+    (np.random.rand(100, 100), 0, 0, None, (100, 100), UserWarning, COMMON_WARN["user_warn_zero"]),  # No border, original size
+    (np.random.rand(100, 100, 3), 0, 0, True, (100, 100, 3), UserWarning, COMMON_WARN["user_warn_zero"]),  # No border, original size (100x100 with 3 channels)
+    (np.random.rand(100, 100, 3), 0, 20, True, (100, 100, 3), UserWarning, COMMON_WARN["user_warn_zero"]),  # No height border, original size on height (100x140 with 3 channels)
     
     # Test case 3: Large Outside Border
-    (np.random.rand(100, 100), 200, 200, None, (500, 500)),  # Explicit border size, expect 500x500
-    (np.random.rand(100, 100, 3), 200, 200, None, (500, 500, 3)),  # Valid border, expect 500x500 with 3 channels
+    (np.random.rand(100, 100), 200, 200, None, (500, 500), UserWarning, COMMON_WARN["user_warn_outside"]),  # Explicit border size, expect 500x500
+    (np.random.rand(100, 100, 3), 200, 200, None, (500, 500, 3), UserWarning, COMMON_WARN["user_warn_outside"]),  # Valid border, expect 500x500 with 3 channels
     
     # Test case 4: Very Small Image with Large Inside Border 
-    (np.random.rand(5, 5), 1, 1, True, (3, 3)),  # Inside border, expect 3x3 image
-    (np.random.rand(5, 5, 3), 1, 1, True, (3, 3, 3)),  # Smaller inside border, expect 3x3 image with 3 channels
+    (np.random.rand(5, 5), 1, 1, True, (3, 3), UserWarning, COMMON_WARN["user_warn_inside"]),  # Large inside border, expect 3x3 image
+    (np.random.rand(10, 10, 3), 3, 3, True, (4, 4, 3), UserWarning, COMMON_WARN["user_warn_inside"]),  # Large inside border, expect 3x3 image with 3 channels
 ])
-def test_edge_cases(img_shape, h_border, w_border, inside, expected_shape):
+def test_edge_cases(img_shape, h_border, w_border, inside, expected_shape, expected_warning, msg):
     """
     Combined edge cases for frame_image function (with no errors expected).
     This test combines multiple edge cases in one function using pytest parametrize.
     """
-    framed_img = frame_image(img_shape, h_border=h_border, w_border=w_border, inside=inside, color=0)
-    
+    with pytest.warns(expected_warning, match = msg):
+        framed_img = frame_image(img_shape, h_border=h_border, w_border=w_border, inside=inside, color=0)
+
     # Check if the output shape matches the expected shape
     assert framed_img.shape == expected_shape
 
 
-# Error Cases
+# Error Cases:
 # Common error descriptions that will be reused
 COMMON_DESC = {
     "type_err_int": "Each color component must be an integer.",
