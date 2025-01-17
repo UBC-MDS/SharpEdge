@@ -12,10 +12,7 @@ class Utility:
             raise TypeError("Image format must be a numpy array.")
         # Check input image array shape
         if not (img_array.ndim == 2 or (img_array.ndim == 3 and img_array.shape[2] == 3)):
-            raise ValueError(
-            f"Invalid image shape: {img_array.shape}. "
-            "Expected 2D (grayscale) or 3D with 3 channels (RGB)."
-            )
+            raise ValueError("Invalid image array dimensions")
         # Check if the array is empty or contains zero-sized dimensions
         if img_array.size == 0 or any(dim == 0 for dim in img_array.shape):
             raise ValueError("Image size must not be zero in any dimension.")

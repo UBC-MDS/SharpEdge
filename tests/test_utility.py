@@ -44,7 +44,32 @@ def test_erroneous_image_format(invalid_input, expected_error):
     with pytest.raises(TypeError, match=expected_error):
         Utility._input_checker(invalid_input)
 
-        
+# Part 2 of the input_checker: image array dimensions
+# Expected Test Cases
+@pytest.mark.parametrize("valid_array", [
+    np.ones((100, 200, 3)),
+    np.ones((300, 500))
+])
+def test_valid_image_shape(valid_array):
+    try:
+        Utility._input_checker(valid_array)
+    except Exception as e:
+        pytest.fail(f"Valid data raised an error: {e}")
+
+
+# Erroneous Cases
+@pytest.mark.parametrize("invalid_input, expected_error", [
+    (np.array([]), "Invalid image array dimensions"),
+    (np.array([1, 2]), "Invalid image array dimensions"),
+    (np.ones((10, 10, 5)), "Invalid image array dimensions"),
+    (np.ones((6, 7, 9, 2)), "Invalid image array dimensions"),
+    (np.ones(10), "Invalid image array dimensions")
+])
+def test_erroneous_image_shape(invalid_input, expected_error):
+    with pytest.raises(ValueError, match=expected_error):
+        Utility._input_checker(invalid_input)
+
+
 # Part 3 of the input_checker: Empty Array & Missing Dimensions      
 # Valid Cases: Test the utility function with valid edge cases
 @pytest.mark.parametrize("edge_array", [
