@@ -52,12 +52,13 @@ def warn_msg():
     """
     Provides the common warnings for the edge test cases.
     """
-    COMMON_WARN = {
+    warn_msg = {
         "user_warn_rgb": "Input is already RGB. No conversion needed.",
         "user_warn_gray": "Input is already grayscale. No conversion needed.",
-        "user_warn_swap_extr": "Grayscale images have no channels to swap or extract."
+        "user_warn_swap_extr": "Grayscale images have no channels to swap or extract.",
+        "user_warn_len_0": "No channels specified for extraction. Returning the image as-is."
     }
-    return COMMON_WARN
+    return warn_msg
 
 @pytest.mark.parametrize(
     "img, mode, ch_swap, ch_extract, expected_output, expected_warning, msg_key",
@@ -67,19 +68,23 @@ def warn_msg():
         ("img_gray", 'gray', None, None, "img_gray", UserWarning,"user_warn_gray" )  # Grayscale to Grayscale 
 
         # Scenario 2: Grayscale not qualified for color swap or extraction
-        ("img_gray", 'gray', [2, 1, 0], None, "img_gray", UserWarning, "user_warn_swap_extr")
-        ("img_gray", 'gray', None, [0, 1], "img_gray", UserWarning, "user_warn_swap_extr")
+        ("img_rgb", 'gray', [2, 1, 0], None, "img_gray", UserWarning, "user_warn_swap_extr")
+        ("img_rgb", 'gray', None, [0, 1], "img_gray", UserWarning, "user_warn_swap_extr")
+        
+        # Scenario 3: Empty `ch_extract` tuple or list
+        ("img_gray", 'rgb', None, (), None, UserWarning, "user_warn_len_0"),  
+        ("img_gray", 'rgb', None, [], None, UserWarning, "user_warn_len_0"),  
 
     ]
 )
-def test_edge_cases(image_data, test_img, mode, ch_swap, ch_extract, expected_output, expected_warning, msg):
+def test_edge_cases(img_dict, warn_msg, test_img, mode, ch_swap, ch_extract, expected_output, expected_warning, msg):
     """
     Test edge cases where no transformation should occur or where warnings should be raised.
     """
     # Retrieve the actual image and expected output from the fixture dictionary
-    test_img_array = image_data[test_img]  # Access input image array
-    expected_output_array = image_data[expected_output]  # Access expected output array
-    msg = COMMON_WARN[msg_key]  # Access expected warning msg
+    test_img_array = img_dict[test_img]  # Access input image array
+    expected_output_array = img_dict[expected_output]  # Access expected output array
+    msg = warn_msg[msg_key]  # Access expected warning msg
 
     # Use pytest's `warns` to check that a warning is raised during the function call
     with pytest.warns(expected_warning, match=msg):
@@ -90,34 +95,80 @@ def test_edge_cases(image_data, test_img, mode, ch_swap, ch_extract, expected_ou
 
 
 # Error Cases: These are the cases where the function should raise errors
+@pytest.fixture
+def error_desc():
+    """
+    Provides the common error descriptions for the error test cases.
+    """
+    error_desc = {
+        "type_err_swap_type": "ch_swap must be a list or tuple.",
+        "type_err_swap_int": "All elements in ch_swap must be integers.",
+        "type_err_extr_type": "ch_extract must be a list or tuple.",
+        "type_err_extr_int": "All elements in ch_extract must be integers.",
+        "value_err_mode": "Invalid mode. Mode must be either 'gray' or 'rgb'.",
+        "value_err_swap_len_ind": "ch_swap must be three elements of valid RGB channel indices 0, 1, or 2.",
+        "value_err_swap_no_dup": "ch_swap must include all channels 0, 1, and 2 exactly once.",
+        "value_err_extr_len": "ch_extract can contain a maximum of 2 elements. Use ch_swap for 3-element extraction (equivalent to swapping).",
+        "value_err_extr_ind": "Invalid channel indices. Only 0, 1, or 2 are valid.",
+        "value_err_extr_no_dup": "ch_extract contains duplicate channel indices."
+    }
+
+    return error_desc
+
 @pytest.mark.parametrize(
-    "img, mode, ch_extract, ch_swap, expected_exception",
+    "img, mode, ch_swap, ch_extract, expected_exception, desc_key",
     [
-        # Invalid mode
-        ('rgb', 'invalid_mode', None, None, ValueError),  # Invalid mode value
-        # Invalid ch_extract
-        ('rgb', 'rgb', [3], None, ValueError),  # Invalid channel index in ch_extract
-        ('rgb', 'rgb', 'wrong_type', None, TypeError),  # ch_extract should be a list/tuple
-        # Invalid ch_swap
-        ('rgb', 'rgb', None, [0, 1], ValueError),  # Invalid ch_swap (not enough elements)
-        ('rgb', 'rgb', None, [0, 1, 3], ValueError),  # Invalid ch_swap (index out of range)
-        ('rgb', 'rgb', None, [0, 1, 1], ValueError),  # Invalid ch_swap (duplicate indices)
-        ('gray', 'rgb', None, [0, 1, 2], UserWarning),  # Trying to swap channels on grayscale
+        # Category I: Invalid `mode`
+        ("img_gray", 'invalid', None, None, ValueError, "value_err_mode"), 
+        ("img_rgb", 'invalid', None, None, ValueError, "value_err_mode"),
+        
+        # Category II: Invalid `ch_swap`
+        # 1. Incorrect input data type
+        ("img_gray", 'rgb', [0.0, 1.0, 2.0], None, TypeError, "type_err_swap_int"),
+        ("img_gray", 'rgb', (0.1, 1.1, 2.1), None, TypeError, "type_err_swap_int"), 
+        ("img_gray", 'rgb', 'wrong_type', None, TypeError, "type_err_swap_type"), 
+        ("img_gray", 'rgb', np.array([0, 1, 2]), None, TypeError, "type_err_swap_type")
+
+
+        # 2. Incorrect indices or length
+        ("img_gray", 'rgb', [0, 1], None, ValueError, "value_err_swap_len_ind"),  # Not enough elements
+        ("img_gray", 'rgb', (0, 1, 1, 2), None, ValueError, "value_err_swap_len_ind"),  # Too many elements
+        ("img_gray", 'rgb', (0, 2, 3), None, ValueError, "value_err_swap_len_ind"),  # Index out of range
+        ("img_gray", 'rgb', [3], None, ValueError, "value_err_swap_len_ind"),  # Index out of range
+        
+        # 3. Duplicate indices
+        ("img_gray", 'rgb', [0, 1, 1], None, ValueError, "type_err_swap_no_dup"),  
+        ("img_gray", 'rgb', (2, 2, 2), None, ValueError, "type_err_swap_no_dup"),  
+
+        
+        # Category III: Invalid `ch_extract`
+        # 4. Incorrect input data type
+        ("img_gray", 'rgb', None, [0.0], TypeError, "type_err_extr_int"),
+        ("img_gray", 'rgb', None, (0.1, 1.1), TypeError, "type_err_extr_int"), 
+        ("img_gray", 'rgb', None, 'wrong_type', TypeError, "type_err_extr_type"), 
+        ("img_gray", 'rgb', None, np.array([0, 1]), TypeError, "type_err_extr_type")
+
+        # 5. Out-of-range length
+        ("img_gray", 'rgb', None, [0, 1, 2], ValueError, "value_err_extr_len"),  # Too many elements
+        ("img_gray", 'rgb', None, (0, 1, 1, 2), ValueError, "value_err_extr_len"),  # Too many elements
+        
+        # 6. Incorrect indices
+        ("img_gray", 'rgb', None, (0, 3), ValueError, "value_err_extr_ind"),  # Index out of range
+        ("img_gray", 'rgb', None, [3], ValueError, "value_err_extr_ind"),  # Index out of range
+        
+        # 7. Duplicate indices
+        ("img_gray", 'rgb', None, [1, 1], ValueError, "type_err_extr_no_dup"),  
+        ("img_gray", 'rgb', None, (0, 0), ValueError, "type_err_extr_no_dup"),  
     ]
 )
-def test_error_cases(sample_images, img, mode, ch_extract, ch_swap, expected_exception):
-    img_rgb, img_gray = sample_images
+def test_error_cases(img_dict, error_desc, test_img, mode, ch_swap, ch_extract, expected_exception, desc_key):
+    """
+    Test error cases where expected errors should be raised.
+    """
+    # Retrieve the actual image and expected output from the fixture dictionary
+    test_img_array = img_dict[test_img]  # Access input image array
+    description = error_desc[desc_key]  # Access expected warning msg
 
-    # Select the image based on the mode
-    if img == 'rgb':
-        test_img = img_rgb
-    else:
-        test_img = img_gray
-
-    if ch_extract is not None:
-        with pytest.raises(expected_exception):
-            modulate_image(test_img, mode=mode, ch_extract=ch_extract, ch_swap=ch_swap)
-    else:
-        with pytest.raises(expected_exception):
-            modulate_image(test_img, mode=mode, ch_extract=ch_extract, ch_swap=ch_swap)
-
+    # Use pytest's `raises` to raise the expected error during the function call
+    with pytest.raises(expected_exception, match = description):
+        modulate_image(test_img_array, mode=mode, ch_extract=ch_extract, ch_swap=ch_swap)
