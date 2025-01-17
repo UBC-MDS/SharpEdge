@@ -19,14 +19,14 @@ def test_valid_inputs(flip, rotate, shift_x, shift_y, expected):
     result = reposition_image(img, flip=flip, rotate=rotate, shift_x=shift_x, shift_y=shift_y)
     assert np.array_equal(result, expected), f"Unexpected result for flip={flip}, rotate={rotate}, shift_x={shift_x}, shift_y={shift_y}"
 
-# Test erroneous cases that pass
+# Test cases that pass
 @pytest.mark.parametrize("flip, rotate, shift_x, shift_y, expected", [
     ('none', 'up', 0, 0, np.array([[1, 2], [3, 4]])),  # No transformation
     ('horizontal', 'down', 0, 0, np.array([[3, 4], [1, 2]])),  # Horizontal flip, down rotation
     ('vertical', 'left', 0, 0, np.array([[4, 2], [3, 1]])),  # Vertical flip, left rotation
     ('both', 'right', 0, 0, np.array([[2, 4], [1, 3]])),  # Both flips, right rotation
 ])
-def test_erroneous_cases_that_pass(flip, rotate, shift_x, shift_y, expected):
+def test_valid_transformations(flip, rotate, shift_x, shift_y, expected):
     img = np.array([[1, 2], [3, 4]])
     result = reposition_image(img, flip=flip, rotate=rotate, shift_x=shift_x, shift_y=shift_y)
     assert np.array_equal(result, expected), f"Unexpected result for flip={flip}, rotate={rotate}, shift_x={shift_x}, shift_y={shift_y}"
@@ -43,7 +43,7 @@ def test_edge_cases(flip, rotate, shift_x, shift_y):
     result = reposition_image(img, flip=flip, rotate=rotate, shift_x=shift_x, shift_y=shift_y)
     assert result.shape == img.shape, f"Unexpected shape for flip={flip}, rotate={rotate}, shift_x={shift_x}, shift_y={shift_y}"
 
-#Test erroneous cases 
+# Test erroneous cases 
 
 # Test invalid flip parameter
 def test_invalid_flip():
@@ -81,3 +81,4 @@ def test_invalid_image_dimensions():
     img = np.array([1, 2, 3])  # 1D array
     with pytest.raises(ValueError):
         reposition_image(img)
+
