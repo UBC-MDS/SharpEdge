@@ -99,7 +99,7 @@ def modulate_image(img, mode='gray', ch_swap=None, ch_extract=None):
 
     # Validate 'mode' input
     if mode not in ['gray', 'rgb']:
-        raise ValueError(f"Invalid mode '{mode}'. Mode must be either 'gray' or 'rgb'.")
+        raise ValueError("Invalid mode. Mode must be either 'gray' or 'rgb'.")
 
     # Handle grayscale mode (2D array) and RGB mode (3D array)
     if mode == 'gray' and len(img.shape) == 2:
@@ -160,11 +160,20 @@ def modulate_image(img, mode='gray', ch_swap=None, ch_extract=None):
             if not all(isinstance(ch, int) for ch in ch_extract):
                 raise TypeError("All elements in ch_extract must be integers.")
             
+            # Check for length limit (max length of 3 channels)
+            if len(ch_extract) > 2:
+                raise ValueError("ch_extract can contain a maximum of 2 elements. Use ch_swap for 3-element extraction (equivalent to swapping).")
+            
             if not all(ch in [0, 1, 2] for ch in ch_extract):
                 raise ValueError("Invalid channel indices. Only 0, 1, or 2 are valid.")
             
             if len(set(ch_extract)) != len(ch_extract):
                 raise ValueError("ch_extract contains duplicate channel indices.")
+            
+            # Handle empty extraction (no extraction)
+            if len(ch_extract) == 0:
+                warnings.warn("No channels specified for extraction. Returning the image as-is.", UserWarning)
+                return img
             
             # Perform channel extraction 
             img = img[..., ch_extract]
