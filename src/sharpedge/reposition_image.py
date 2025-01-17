@@ -1,3 +1,6 @@
+import numpy as np
+import warnings
+
 def reposition_image(img, flip='none', rotate='up', shift_x=0, shift_y=0):
     """
     Flip, rotate, and shift an image based on the specified requested action.
@@ -37,3 +40,48 @@ def reposition_image(img, flip='none', rotate='up', shift_x=0, shift_y=0):
     >>> repositioned_img = reposition_image(img, flip='horizontal', rotate='left', shift_x=10, shift_y=20)
     >>> repositioned_img = reposition_image(img_rgb, flip='both', rotate='down', shift_x=-5, shift_y=10)
     """
+   # Validate img
+    if not isinstance(img, np.ndarray):
+        raise TypeError("Input image must be a numpy array.")
+    if img.size == 0:
+        raise ValueError("Image array must not be empty.")
+
+    # Validate flip
+    valid_flips = ["none", "horizontal", "vertical", "both"]
+    if flip not in valid_flips:
+        raise ValueError("flip must be one of 'none', 'horizontal', 'vertical', or 'both'.")
+
+    # Validate rotate
+    valid_rotations = ["up", "left", "right", "down"]
+    if rotate not in valid_rotations:
+        raise ValueError("rotate must be one of 'up', 'left', 'right', or 'down'.")
+
+    # Validate shift_x and shift_y
+    if not isinstance(shift_x, int):
+        raise TypeError("shift_x must be an integer.")
+    if not isinstance(shift_y, int):
+        raise TypeError("shift_y must be an integer.")
+
+    # Perform flipping
+    if flip == "horizontal":
+        img = np.fliplr(img)
+    elif flip == "vertical":
+        img = np.flipud(img)
+    elif flip == "both":
+        img = np.fliplr(np.flipud(img))
+
+    # Perform rotation
+    if rotate == "left":
+        img = np.rot90(img, k=1)
+    elif rotate == "right":
+        img = np.rot90(img, k=-1)
+    elif rotate == "down":
+        img = np.rot90(img, k=2)
+
+    # Perform shifting
+    img = np.roll(img, shift_x, axis=1)  # Shift along x-axis
+    img = np.roll(img, shift_y, axis=0)  # Shift along y-axis
+
+    return img
+
+
