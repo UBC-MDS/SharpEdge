@@ -43,6 +43,8 @@ def test_edge_cases(flip, rotate, shift_x, shift_y):
     result = reposition_image(img, flip=flip, rotate=rotate, shift_x=shift_x, shift_y=shift_y)
     assert result.shape == img.shape, f"Unexpected shape for flip={flip}, rotate={rotate}, shift_x={shift_x}, shift_y={shift_y}"
 
+#Test erroneous cases 
+
 # Test invalid flip parameter
 def test_invalid_flip():
     img = np.array([[1, 2], [3, 4]])
