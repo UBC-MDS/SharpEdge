@@ -98,3 +98,4 @@ def test_valid_3d_array(valid_input):
 ])
 def test_zero_size_dimensions(invalid_input):
     with pytest.raises(ValueError, match="Image size must not be zero in any dimension."):
+        Utility._input_checker(invalid_input)
