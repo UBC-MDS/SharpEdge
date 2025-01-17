@@ -1,3 +1,9 @@
+import numpy as np
+import warnings
+from scipy.ndimage import convolve
+
+
+# Refernece: DSCI 512 Lab 4
 def energy(img):
     """
     Computes the energy map of an image.
@@ -29,7 +35,14 @@ def energy(img):
     >>> print(e.shape)
     (8, 5)
     """
-    pass
+    dy = np.array([-1, 0, 1])[:, None, None]
+    dx = np.array([-1, 0, 1])[None, :, None]
+
+    # Calculate the energy map
+    energy_map = convolve(img, dx)**2 + convolve(img, dy)**2
+
+    # Sum the energy across the color channels
+    return np.sum(energy_map, axis=2)
 
 
 def find_vertical_seam(energy):
@@ -58,7 +71,34 @@ def find_vertical_seam(energy):
     >>> print(seam)
     [1, 1]
     """
-    pass
+    rows, cols = energy.shape
+
+    # Initialize cumulative energy matrix
+    CME = np.zeros((rows, cols + 2))
+    CME[:, 0] = np.inf
+    CME[:, -1] = np.inf
+    CME[:, 1:-1] = energy
+
+    # Compute cumulative minimum energy
+    for i in range(1, rows):
+        prev_row = CME[i - 1]
+        parents = np.vstack([
+            prev_row[:-2],
+            prev_row[1:-1],
+            prev_row[2:]
+        ])
+        CME[i, 1:-1] += np.min(parents, axis=0)
+
+    # Find seam array
+    seam = np.zeros(rows, dtype=int)
+    seam[-1] = np.argmin(CME[-1, 1:-1]) + 1
+
+    for r in range(rows - 2, -1, -1):
+        pos = seam[r + 1]
+        offset = np.argmin(CME[r, pos - 1:pos + 2]) - 1
+        seam[r] = pos + offset
+
+    return seam - 1
 
 
 def find_horizontal_seam(energy):
@@ -88,7 +128,7 @@ def find_horizontal_seam(energy):
     >>> print(seam)
     [0, 0]
     """
-    pass
+    return find_vertical_seam(energy.T)
 
 
 def remove_vertical_seam(img, seam):
@@ -123,7 +163,22 @@ def remove_vertical_seam(img, seam):
     >>> print(new_img.shape)
     (8, 4, 3)
     """
-    pass
+    # Get dimensions of the image
+    height, width, num_channels = img.shape
+
+    # Calculate linear indices of seam pixels
+    linear_indices = np.array(seam) + np.arange(height) * width
+
+    # Create output image array with one less column
+    resized_image = np.zeros((height, width-1, num_channels), dtype=img.dtype)
+
+    # Remove seam pixels and reshape the channel data
+    for channel in range(num_channels):
+        channel_data = np.delete(img[:, :, channel], linear_indices.astype(int))
+        channel_data = np.reshape(channel_data, (height, width-1))
+        resized_image[:, :, channel] = channel_data
+
+    return resized_image
 
 
 def remove_horizontal_seam(img, seam):
@@ -158,7 +213,7 @@ def remove_horizontal_seam(img, seam):
     >>> print(new_img.shape)
     (4, 8, 3)
     """
-    pass
+    return np.transpose(remove_vertical_seam(np.transpose(img, (1, 0, 2)), seam), (1, 0, 2))
 
 
 def seam_carve(img, target_height, target_width):
@@ -187,6 +242,14 @@ def seam_carve(img, target_height, target_width):
         - If target_height is greater than the original height or less than 1.
         - If target_width is greater than the original width or less than 1.
 
+    Warnings
+    --------
+    UserWarning
+        - If the target size is the same as the original size (no resizing needed).
+        - If only one dimension is resized (height or width remains the same).
+        - If the original image or target size is reduced to a single pixel.
+        - If the resizing is significant (difference of 200+ pixels), which may cause long processing times.
+
     Examples
     --------
     >>> img = np.random.rand(5, 5, 3)
@@ -194,4 +257,54 @@ def seam_carve(img, target_height, target_width):
     >>> print(resized_img.shape)
     (3, 3, 3)
     """
-    pass
+    # Validate input image dimensions
+    if img.ndim != 3 or img.shape[2] != 3:
+        raise ValueError("Input image must be a 3D numpy array with 3 channels.")
+
+    # Validate target dimensions
+    if not isinstance(target_height, int) or not isinstance(target_width, int):
+        raise ValueError("Target dimensions must be integers.")
+
+    height, width = img.shape[:2]
+
+    # Check if target dimensions are valid
+    if target_height > height:
+        raise ValueError("Target height cannot be greater than original height.")
+    if target_width > width:
+        raise ValueError("Target width cannot be greater than original width.")
+    if target_height < 1:
+        raise ValueError("Target height must be at least 1.")
+    if target_width < 1:
+        raise ValueError("Target width must be at least 1.")
+
+    # Check for edge cases using pytest warnings
+    if target_height == height and target_width == width:
+        warnings.warn("Both target height and width are the same as that of the original image. No resizing needed.", UserWarning)
+    elif target_height == height:
+        warnings.warn("Target height is the same as the original height.", UserWarning)
+    elif target_width == width:
+        warnings.warn("Target width is the same as the original width.", UserWarning)
+    if height == 1 and width == 1:
+        warnings.warn("Image is already a single pixel.", UserWarning)
+    if target_height == 1 and target_width == 1:
+        warnings.warn("Warning! Resizing to a single pixel.", UserWarning)
+    if (height - target_height) >= 200 or (width - target_width) >= 200:
+        warnings.warn("Significant resizing is required. It may take a long while.", UserWarning)
+
+    result = img.copy()
+
+    # Remove vertical seams until desired width is reached
+    while width > target_width:
+        energy_map = energy(result)
+        seam = find_vertical_seam(energy_map)
+        result = remove_vertical_seam(result, seam)
+        width = result.shape[1]
+
+    # Remove horizontal seams until desired height is reached  
+    while height > target_height:
+        energy_map = energy(result)
+        seam = find_horizontal_seam(energy_map)
+        result = remove_horizontal_seam(result, seam)
+        height = result.shape[0]
+
+    return result
