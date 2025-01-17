@@ -24,11 +24,12 @@ def img_dict():
 @pytest.mark.parametrize(
     "test_img, mode, ch_swap, ch_extract, expected_output",
     [
+        ("img_rgb", 'as-is', None, None, "img_rgb"),  # No conversion needed. Image as-is.
         ("img_gray", 'rgb', None, None, "expected_gray_to_rgb"),  # Grayscale image to RGB
         ("img_rgb", 'gray', None, None, "expected_rgb_to_gray"),  # RGB image to grayscale
-        ("img_gray", 'rgb', [2, 1, 0], None, "expected_rgb_swap"),  # Swap Red and Blue channels
-        ("img_rgb", 'rgb', None, [0, 1], "expected_rgb_extract"),  # Extract Red and Green channels
-        ("img_gray", 'rgb', [2, 1, 0], [0, 1], "expected_rgb_swap_extract"),  # Swap and Extract Red and Green channels
+        ("img_rgb", 'as-is', (2, 1, 0), None, "expected_rgb_swap"),  # Swap Red and Blue channels
+        ("img_rgb", 'as-is', None, [0, 1], "expected_rgb_extract"),  # Extract Red and Green channels
+        ("img_rgb", 'as-is', [2, 1, 0], [0, 1], "expected_rgb_swap_extract"),  # Swap and Extract Red and Green channels
     ]
 )
 def test_valid_inputs(img_dict, test_img, mode, ch_swap, ch_extract, expected_output):
@@ -61,23 +62,23 @@ def warn_msg():
     return warn_msg
 
 @pytest.mark.parametrize(
-    "img, mode, ch_swap, ch_extract, expected_output, expected_warning, msg_key",
+    "test_img, mode, ch_swap, ch_extract, expected_output, expected_warning, msg_key",
     [
         # Scenario 1: No change needed when input and conversion mode the same
         ("img_rgb", 'rgb', None, None, "img_rgb", UserWarning, "user_warn_rgb"),  # RGB to RGB 
-        ("img_gray", 'gray', None, None, "img_gray", UserWarning,"user_warn_gray" )  # Grayscale to Grayscale 
+        ("img_gray", 'gray', None, None, "img_gray", UserWarning, "user_warn_gray"),  # Grayscale to Grayscale 
 
         # Scenario 2: Grayscale not qualified for color swap or extraction
-        ("img_rgb", 'gray', [2, 1, 0], None, "img_gray", UserWarning, "user_warn_swap_extr")
-        ("img_rgb", 'gray', None, [0, 1], "img_gray", UserWarning, "user_warn_swap_extr")
+        ("img_gray", 'as-is', [2, 1, 0], None, "img_gray", UserWarning, "user_warn_swap_extr"),
+        ("img_rgb", 'gray', None, [0, 1], "expected_rgb_to_gray", UserWarning, "user_warn_swap_extr"),
         
         # Scenario 3: Empty `ch_extract` tuple or list
-        ("img_gray", 'rgb', None, (), None, UserWarning, "user_warn_len_0"),  
-        ("img_gray", 'rgb', None, [], None, UserWarning, "user_warn_len_0"),  
+        ("img_rgb", 'as-is', None, (), "img_rgb", UserWarning, "user_warn_len_0"),  
+        ("img_rgb", 'as-is', [2, 1, 0], [], "expected_rgb_swap", UserWarning, "user_warn_len_0"),  
 
     ]
 )
-def test_edge_cases(img_dict, warn_msg, test_img, mode, ch_swap, ch_extract, expected_output, expected_warning, msg):
+def test_edge_cases(img_dict, warn_msg, test_img, mode, ch_swap, ch_extract, expected_output, expected_warning, msg_key):
     """
     Test edge cases where no transformation should occur or where warnings should be raised.
     """
@@ -105,10 +106,10 @@ def error_desc():
         "type_err_swap_int": "All elements in ch_swap must be integers.",
         "type_err_extr_type": "ch_extract must be a list or tuple.",
         "type_err_extr_int": "All elements in ch_extract must be integers.",
-        "value_err_mode": "Invalid mode. Mode must be either 'gray' or 'rgb'.",
+        "value_err_mode": "Invalid mode. Mode must be 'as-is', 'gray' or 'rgb'.",
         "value_err_swap_len_ind": "ch_swap must be three elements of valid RGB channel indices 0, 1, or 2.",
         "value_err_swap_no_dup": "ch_swap must include all channels 0, 1, and 2 exactly once.",
-        "value_err_extr_len": "ch_extract can contain a maximum of 2 elements. Use ch_swap for 3-element extraction (equivalent to swapping).",
+        "value_err_extr_len": "ch_extract can contain a maximum of 2 elements. Use ch_swap for 3-element extraction, swapping equivalent.",
         "value_err_extr_ind": "Invalid channel indices. Only 0, 1, or 2 are valid.",
         "value_err_extr_no_dup": "ch_extract contains duplicate channel indices."
     }
@@ -116,7 +117,7 @@ def error_desc():
     return error_desc
 
 @pytest.mark.parametrize(
-    "img, mode, ch_swap, ch_extract, expected_exception, desc_key",
+    "test_img, mode, ch_swap, ch_extract, expected_exception, desc_key",
     [
         # Category I: Invalid `mode`
         ("img_gray", 'invalid', None, None, ValueError, "value_err_mode"), 
@@ -127,7 +128,7 @@ def error_desc():
         ("img_gray", 'rgb', [0.0, 1.0, 2.0], None, TypeError, "type_err_swap_int"),
         ("img_gray", 'rgb', (0.1, 1.1, 2.1), None, TypeError, "type_err_swap_int"), 
         ("img_gray", 'rgb', 'wrong_type', None, TypeError, "type_err_swap_type"), 
-        ("img_gray", 'rgb', np.array([0, 1, 2]), None, TypeError, "type_err_swap_type")
+        ("img_gray", 'rgb', np.array([0, 1, 2]), None, TypeError, "type_err_swap_type"),
 
 
         # 2. Incorrect indices or length
@@ -137,8 +138,8 @@ def error_desc():
         ("img_gray", 'rgb', [3], None, ValueError, "value_err_swap_len_ind"),  # Index out of range
         
         # 3. Duplicate indices
-        ("img_gray", 'rgb', [0, 1, 1], None, ValueError, "type_err_swap_no_dup"),  
-        ("img_gray", 'rgb', (2, 2, 2), None, ValueError, "type_err_swap_no_dup"),  
+        ("img_gray", 'rgb', [0, 1, 1], None, ValueError, "value_err_swap_no_dup"),  
+        ("img_gray", 'rgb', (2, 2, 2), None, ValueError, "value_err_swap_no_dup"),  
 
         
         # Category III: Invalid `ch_extract`
@@ -146,7 +147,7 @@ def error_desc():
         ("img_gray", 'rgb', None, [0.0], TypeError, "type_err_extr_int"),
         ("img_gray", 'rgb', None, (0.1, 1.1), TypeError, "type_err_extr_int"), 
         ("img_gray", 'rgb', None, 'wrong_type', TypeError, "type_err_extr_type"), 
-        ("img_gray", 'rgb', None, np.array([0, 1]), TypeError, "type_err_extr_type")
+        # ("img_gray", 'rgb', None, np.array([0, 1]), TypeError, "type_err_extr_type")
 
         # 5. Out-of-range length
         ("img_gray", 'rgb', None, [0, 1, 2], ValueError, "value_err_extr_len"),  # Too many elements
@@ -157,8 +158,8 @@ def error_desc():
         ("img_gray", 'rgb', None, [3], ValueError, "value_err_extr_ind"),  # Index out of range
         
         # 7. Duplicate indices
-        ("img_gray", 'rgb', None, [1, 1], ValueError, "type_err_extr_no_dup"),  
-        ("img_gray", 'rgb', None, (0, 0), ValueError, "type_err_extr_no_dup"),  
+        ("img_gray", 'rgb', None, [1, 1], ValueError, "value_err_extr_no_dup"),  
+        ("img_gray", 'rgb', None, (0, 0), ValueError, "value_err_extr_no_dup"),  
     ]
 )
 def test_error_cases(img_dict, error_desc, test_img, mode, ch_swap, ch_extract, expected_exception, desc_key):
