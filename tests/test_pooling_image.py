@@ -1,0 +1,37 @@
+import pytest
+import numpy as np
+from sharpedge.pooling_image import pooling_image
+
+# Valid cases: Testing pooling behavior with different pooling functions
+@pytest.mark.parametrize("img, window_size, func, expected", [
+    (np.array([[1, 2], [3, 4]]), 2, np.mean, np.array([[2]])),  # 2x2 pooling with mean
+    (np.array([[1, 2], [3, 4]]), 2, np.max, np.array([[4]])),   # 2x2 pooling with max
+    (np.array([[1, 2], [3, 4]]), 2, np.min, np.array([[1]])),   # 2x2 pooling with min
+    (np.array([[[1, 2, 3], [4, 5, 6]], [[7, 8, 9], [10, 11, 12]]]), 2, np.mean,
+     np.array([[[5.5, 6.5, 7.5]]]))  # RGB image pooling with mean
+])
+def test_valid_pooling(img, window_size, func, expected):
+    result = pooling_image(img, window_size, func)
+    assert np.array_equal(result, expected), f"Expected {expected}, got {result}"
+
+# Edge cases: Single-pixel output, very small input sizes
+@pytest.mark.parametrize("img, window_size, func, expected", [
+    (np.array([[10]]), 1, np.mean, np.array([[10]])),  # Single pixel, no change
+    (np.array([[5, 15], [10, 20]]), 2, np.mean, np.array([[12.5]])),  # Entire image pooling
+    (np.array([[0, 0], [0, 0]]), 2, np.max, np.array([[0]])),  # All-zero image
+    (np.array([[[255, 255, 255], [255, 255, 255]]]), 2, np.min, np.array([[[255, 255, 255]]]))  # All-max RGB
+])
+def test_edge_pooling(img, window_size, func, expected):
+    result = pooling_image(img, window_size, func)
+    assert np.array_equal(result, expected), f"Expected {expected}, got {result}"
+
+# Erroneous cases: Testing logic errors not caught by _input_checker
+@pytest.mark.parametrize("img, window_size, func, expected_error", [
+    (np.array([[1, 2, 3], [4, 5, 6]]), 2, np.mean, ValueError),  # Non-divisible dimensions
+    (np.array([[1, 2], [3, 4]]), 3, np.mean, ValueError),  # Window size larger than image
+    (np.array([[1, 2], [3, 4]]), 2, "not_a_function", TypeError),  # Non-callable function
+    (np.array([[1, 2], [3, 4]]), 2.5, np.mean, TypeError)  # Non-integer window size
+])
+def test_erroneous_pooling(img, window_size, func, expected_error):
+    with pytest.raises(expected_error):
+        pooling_image(img, window_size, func)
