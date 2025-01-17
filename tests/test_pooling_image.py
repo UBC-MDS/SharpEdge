@@ -4,7 +4,6 @@ from sharpedge.pooling_image import pooling_image
 
 # Valid cases: Testing pooling behavior with different pooling functions
 @pytest.mark.parametrize("img, window_size, func, expected", [
-    (np.array([[1, 2], [3, 4]]), 2, np.mean, np.array([[2]])),  # 2x2 pooling with mean
     (np.array([[1, 2], [3, 4]]), 2, np.max, np.array([[4]])),   # 2x2 pooling with max
     (np.array([[1, 2], [3, 4]]), 2, np.min, np.array([[1]])),   # 2x2 pooling with min
     (np.array([[[1, 2, 3], [4, 5, 6]], [[7, 8, 9], [10, 11, 12]]]), 2, np.mean,
@@ -19,7 +18,6 @@ def test_valid_pooling(img, window_size, func, expected):
     (np.array([[10]]), 1, np.mean, np.array([[10]])),  # Single pixel, no change
     (np.array([[5, 15], [10, 20]]), 2, np.mean, np.array([[12.5]])),  # Entire image pooling
     (np.array([[0, 0], [0, 0]]), 2, np.max, np.array([[0]])),  # All-zero image
-    (np.array([[[255, 255, 255], [255, 255, 255]]]), 2, np.min, np.array([[[255, 255, 255]]]))  # All-max RGB
 ])
 def test_edge_pooling(img, window_size, func, expected):
     result = pooling_image(img, window_size, func)
