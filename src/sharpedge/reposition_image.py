@@ -60,6 +60,13 @@ def reposition_image(img, flip='none', rotate='up', shift_x=0, shift_y=0):
     if not isinstance(shift_y, int):
         raise TypeError("shift_y must be an integer.")
 
+    # Get image dimensions
+    img_height, img_width = img.shape
+    
+    # Check if shift values are larger than image dimensions and issue a warning if necessary
+    if shift_x >= img_width or shift_y >= img_height:
+        warnings.warn(f"Shift values ({shift_x}, {shift_y}) are larger than the image dimensions.", UserWarning)
+
     # Perform flipping
     if flip == "horizontal":
         img = np.fliplr(img)
