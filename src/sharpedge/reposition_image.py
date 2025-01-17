@@ -1,5 +1,6 @@
 import numpy as np
 import warnings
+from sharpedge._utils.utility import Utility
 
 def reposition_image(img, flip='none', rotate='up', shift_x=0, shift_y=0):
     """
@@ -40,11 +41,8 @@ def reposition_image(img, flip='none', rotate='up', shift_x=0, shift_y=0):
     >>> repositioned_img = reposition_image(img, flip='horizontal', rotate='left', shift_x=10, shift_y=20)
     >>> repositioned_img = reposition_image(img_rgb, flip='both', rotate='down', shift_x=-5, shift_y=10)
     """
-   # Validate img
-    if not isinstance(img, np.ndarray):
-        raise TypeError("Input image must be a numpy array.")
-    if img.size == 0:
-        raise ValueError("Image array must not be empty.")
+   # Input validation
+    Utility._input_checker(img)
 
     # Validate flip
     valid_flips = ["none", "horizontal", "vertical", "both"]
