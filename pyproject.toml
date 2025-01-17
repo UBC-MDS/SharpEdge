@@ -13,6 +13,10 @@ numpy = ">=2.2.1"
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.4"
 pytest-cov = "^6.0.0"
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/main
 
 [tool.semantic_release]
 version_toml = [
