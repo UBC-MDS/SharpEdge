@@ -4,31 +4,47 @@ import warnings
 from sharpedge.modulate_image import modulate_image
 
 @pytest.fixture
-def img_rgb():
-    # Create sample images for testing
-    img_rgb = np.random.randint(0, 256, (5, 5, 3), dtype=np.uint8)  # RGB image (5x5) with 3 channels
-    return img_rgb
-
-@pytest.fixture
-def img_gray():
-    # Create sample images for testing
-    img_gray = np.random.randint(0, 256, (5, 5), dtype=np.uint8)  # Grayscale image (5x5)
-    return img_gray
+def img_dict():
+    """
+    Fixture that returns a dictionary with input and expected output arrays for testing.
+    """
+    # Dictionary of inputs and expected outputs
+    img_dict = {
+        "img_rgb": np.full((5, 5, 3), [100, 150, 200], dtype=np.uint8),  # Creates a 5x5 RGB image with same values,
+        "img_gray": np.full((5, 5), 100, dtype=np.uint8),  # Creates a 5x5 grayscale image with value 100 for all pixels
+        "expected_rgb_to_gray": np.full((5, 5), 150, dtype=np.uint8),  # Averaging RGB values
+        "expected_gray_to_rgb": np.full((5, 5, 3), [100, 100, 100], dtype=np.uint8),  # Grayscale to RGB conversion
+        "expected_rgb_swap": np.full((5, 5, 3), [200, 150, 100], dtype=np.uint8),  # Swap Red and Blue channels
+        "expected_rgb_extract": np.full((5, 5, 2), [100, 150], dtype=np.uint8),  # Extract Red and Green channels
+        "expected_rgb_swap_extract": np.full((5, 5, 2), [200, 150], dtype=np.uint8),  # Swap and Extract Red and Green
+    }
+    return img_dict
 
 # Expected Test Cases:
 @pytest.mark.parametrize(
-    "test_img, mode, ch_swap, ch_extract, expected_shape",
+    "test_img, mode, ch_swap, ch_extract, expected_output",
     [
-        (img_gray, 'rgb', None, None, (5, 5, 3)),  # Grayscale image (10x5) to RGB
-        (img_rgb, 'gray', None, None, (5, 5)),  # RGB image (10x5) to grayscale
-        (img_gray, 'rgb', [2, 1, 0], None, (5, 5, 3)),  # RGB swap Red and Blue channels
-        (img_rgb, 'rgb', None, [0, 1] (5, 5, 2)),  # RGB extract Red and Green channels
-        (img_gray, 'rgb', [2, 1, 0], [0, 1], (5, 5, 2)),  # RGB swap and extract combined
+        ("img_gray", 'rgb', None, None, "expected_gray_to_rgb"),  # Grayscale image to RGB
+        ("img_rgb", 'gray', None, None, "expected_rgb_to_gray"),  # RGB image to grayscale
+        ("img_gray", 'rgb', [2, 1, 0], None, "expected_rgb_swap"),  # Swap Red and Blue channels
+        ("img_rgb", 'rgb', None, [0, 1], "expected_rgb_extract"),  # Extract Red and Green channels
+        ("img_gray", 'rgb', [2, 1, 0], [0, 1], "expected_rgb_swap_extract"),  # Swap and Extract Red and Green channels
     ]
 )
-def test_valid_inputs(test_img, mode, expected_shape):
-    result = modulate_image(test_img, mode=mode)
-    assert result.shape == expected_shape
+def test_valid_inputs(img_dict, test_img, mode, ch_swap, ch_extract, expected_output):
+    """
+    Test the modulate_image function using various modes and transformations.
+    """
+    # Retrieve the actual image and expected output from the fixture
+    test_img_array = img_dict[test_img]
+    expected_output_array = img_dict[expected_output]
+
+    # Run the function
+    result = modulate_image(test_img_array, mode=mode, ch_swap=ch_swap, ch_extract=ch_extract)
+    
+    # Check that the result matches the expected output exactly
+    np.testing.assert_array_equal(result, expected_output_array)
+
 
 # Edge Cases:
 @pytest.mark.parametrize(
