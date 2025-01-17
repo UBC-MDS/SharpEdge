@@ -30,22 +30,39 @@ def warn_msg():
     """
     return COMMON_WARN
 
-@pytest.mark.filterwarnings("always::UserWarning")
+@pytest.mark.parametrize("img_shape, h_border, w_border, inside, expected_shape, expected_warning", [
+    # Scenario 1: Single Pixel Image
+    (np.array([[0]]), 1, 1, False, (3, 3, 3), UserWarning),  
+    (np.array([[[0, 255, 0]]]), 1, 1, False, (3, 3, 3), UserWarning), 
+])
+def test_edge_cases_multi_warns(img_shape, h_border, w_border, inside, expected_shape, expected_warning):
+    """
+    Edge cases for frame_image function (with no errors expected) that would raise multiple warnings.
+    """
+    with pytest.warns(expected_warning) as record:
+        framed_img = frame_image(img_shape, h_border=h_border, w_border=w_border, inside=inside, color=0)
+
+        # Check if the output shape matches the expected shape
+        assert framed_img.shape == expected_shape
+        
+        # Assert that two warnings were raised
+        assert len(record) == 2
+
+        # Use match parameter to check the pattern of each warning message
+        assert str(record[0].message) == COMMON_WARN["user_warn_img"]
+        assert str(record[1].message) == COMMON_WARN["user_warn_outside"]
+
 @pytest.mark.parametrize("img_shape, h_border, w_border, inside, expected_shape, expected_warning, msg", [
-    # Test case 1: Single Pixel Image
-    (np.array([[0]]), 1, 1, False, (3, 3, 3), UserWarning, COMMON_WARN["user_warn_img"]),  # Expecting a 3x3 image (outside border)
-    (np.array([[[0, 255, 0]]]), 1, 1, False, (3, 3, 3), UserWarning, COMMON_WARN["user_warn_img"]),  # Expecting a 3x3x3 image (outside border)
-    
-    # Test case 2: Minimum Border Size 
+    # Scenario 2: Minimum Border Size 
     (np.random.randint(0, 256, (100, 100, 3)), 0, 0, False, (100, 100, 3), UserWarning, COMMON_WARN["user_warn_zero"]),  # No border, original size
     (np.random.randint(0, 256, (100, 100, 3)), 0, 0, True, (100, 100, 3), UserWarning, COMMON_WARN["user_warn_zero"]),  # No border, original size (100x100 with 3 channels)
     (np.random.randint(0, 256, (100, 100, 3)), 0, 20, True, (100, 100, 3), UserWarning, COMMON_WARN["user_warn_zero"]),  # No height border, original size on height (100x140 with 3 channels)
     
-    # Test case 3: Large Outside Border
+    # Scenario 3: Large Outside Border
     (np.random.randint(0, 256, (100, 100)), 200, 200, False, (500, 500, 3), UserWarning, COMMON_WARN["user_warn_outside"]),  # Explicit border size, expect 500x500
     (np.random.randint(0, 256, (100, 100, 3)), 200, 200, False, (500, 500, 3), UserWarning, COMMON_WARN["user_warn_outside"]),  # Valid border, expect 500x500 with 3 channels
     
-    # Test case 4: Very Small Image with Large Inside Border 
+    # Scenario 4: Very Small Image with Large Inside Border 
     (np.random.randint(0, 256, (5, 5)), 2, 2, True, (5, 5, 3), UserWarning, COMMON_WARN["user_warn_inside"]),  # Large inside border, expect 3x3 image
     (np.random.randint(0, 256, (10, 10, 3)), 3, 3, True, (10, 10, 3), UserWarning, COMMON_WARN["user_warn_inside"]),  # Large inside border, expect 3x3 image with 3 channels
 ])
