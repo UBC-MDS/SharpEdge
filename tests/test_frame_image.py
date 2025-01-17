@@ -30,6 +30,7 @@ def warn_msg():
     """
     return COMMON_WARN
 
+@pytest.mark.filterwarnings("always::UserWarning")
 @pytest.mark.parametrize("img_shape, h_border, w_border, inside, expected_shape, expected_warning, msg", [
     # Test case 1: Single Pixel Image
     (np.array([[0]]), 1, 1, False, (3, 3, 3), UserWarning, COMMON_WARN["user_warn_img"]),  # Expecting a 3x3 image (outside border)
@@ -56,8 +57,8 @@ def test_edge_cases(img_shape, h_border, w_border, inside, expected_shape, expec
     with pytest.warns(expected_warning, match = msg):
         framed_img = frame_image(img_shape, h_border=h_border, w_border=w_border, inside=inside, color=0)
 
-        # # Check if the output shape matches the expected shape
-        # assert framed_img.shape == expected_shape
+        # Check if the output shape matches the expected shape
+        assert framed_img.shape == expected_shape
 
 
 # Error Cases:
