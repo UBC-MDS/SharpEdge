@@ -133,7 +133,7 @@ def modulate_image(img, mode='gray', ch_swap=None, ch_extract=None):
             
             # Validate ch_swap: must be a list or tuple of 3 integers, with no duplicates, and must include all 0, 1, 2
             if not isinstance(ch_swap, (list, tuple)):
-                raise TypeError(f"ch_swap must be a list or tuple, got {type(ch_swap)}.")
+                raise TypeError("ch_swap must be a list or tuple.")
             
             if not all(isinstance(ch, int) for ch in ch_swap):
                 raise TypeError("All elements in ch_swap must be integers.")
@@ -143,6 +143,9 @@ def modulate_image(img, mode='gray', ch_swap=None, ch_extract=None):
             
             if len(set(ch_swap)) != 3:
                 raise ValueError("ch_swap must include all channels 0, 1, and 2 exactly once.")
+            
+            if ch_swap == (0, 1, 2) or ch_swap == [0, 1, 2]:
+                warnings.warn("Input is in default channel order. No swap needed.", UserWarning)
 
             # Perform channel swapping
             img = img[..., ch_swap]
