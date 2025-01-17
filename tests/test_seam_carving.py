@@ -90,3 +90,42 @@ def test_seam_carve_single_pixel_target_output(img, target_height, target_width,
 def test_seam_carve_significant_resizing(img, target_height, target_width, warning_msg):
     with pytest.warns(UserWarning, match=warning_msg):
         result = seam_carve(img, target_height, target_width)
+
+
+# Erroneous Cases
+# Error case 1: invalid image that does not have 3 channels
+@pytest.mark.parametrize("img, target_height, target_width, error_msg", [
+    (np.random.rand(10, 10), 5, 5, "Input image must be a 3D numpy array with 3 channels."),
+    (np.random.rand(10, 10, 2), 5, 5, "Input image must be a 3D numpy array with 3 channels."),
+    (np.random.rand(10, 10, 4), 5, 5, "Input image must be a 3D numpy array with 3 channels."),
+])
+def test_seam_carve_invalid_image_type(img, target_height, target_width, error_msg):
+    with pytest.raises(ValueError, match=error_msg):
+        result = seam_carve(img, target_height, target_width)
+
+
+# Error case 2: invalid target dimensions
+@pytest.mark.parametrize("img, target_height, target_width, error_msg", [
+    (np.random.rand(10, 10, 3), [3], 4, "Target dimensions must be integers."),
+    (np.random.rand(10, 10, 3), 5.5, 5, "Target dimensions must be integers."),
+    (np.random.rand(10, 10, 3), 5, "target_width", "Target dimensions must be integers."),
+    (np.random.rand(10, 10, 3), 5, np.array([3]), "Target dimensions must be integers."),
+    (np.random.rand(10, 10, 3), None, 5, "Target dimensions must be integers."),
+    (np.random.rand(10, 10, 3), 7, (2), "Target dimensions must be integers."),
+    (np.random.rand(10, 10, 3), 7, 0, "Target width must be at least 1."),
+    (np.random.rand(10, 10, 3), -5, 8, "Target height must be at least 1."),
+])
+def test_seam_carve_invalid_target_dimensions(img, target_height, target_width, error_msg):
+    with pytest.raises(ValueError, match=error_msg):
+        result = seam_carve(img, target_height, target_width)
+
+
+# Error case 3: seam carving with target height/width exceeding original height/width
+@pytest.mark.parametrize("img, target_height, target_width, error_msg", [
+    (np.random.rand(10, 10, 3), 11, 5, "Target height cannot be greater than original height."),
+    (np.random.rand(5, 10, 3), 6, 5, "Target width cannot be greater than original width."),
+])
+def test_seam_carve_target_height_exceeds_original(img, target_height, target_width, error_msg):
+    """Test seam carving with target height exceeding original height."""
+    with pytest.raises(ValueError, match=error_msg):
+        seam_carve(img, target_height, target_width)
