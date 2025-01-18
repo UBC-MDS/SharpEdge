@@ -292,8 +292,6 @@ def seam_carve(img, target_height, target_width):
         warnings.warn("Target height is the same as the original height.", UserWarning)
     elif target_width == width:
         warnings.warn("Target width is the same as the original width.", UserWarning)
-    if height == 1 and width == 1:
-        warnings.warn("Image is already a single pixel.", UserWarning)
     if target_height == 1 and target_width == 1:
         warnings.warn("Warning! Resizing to a single pixel.", UserWarning)
     if (height - target_height) >= 200 or (width - target_width) >= 200:

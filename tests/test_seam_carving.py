@@ -52,37 +52,29 @@ def test_seam_carve_no_resize(img, target_height, target_width, warning_msg):
         result = seam_carve(img, target_height, target_width)
 
 
-# Edge case 2: seam carving with a single pixel image, expect warnings
-@pytest.mark.parametrize("img, target_height, target_width, warning_msg", [
-    (np.random.rand(1, 1, 3), 1, 1, "Image is already a single pixel."),
-])
-def test_seam_carve_single_pixel_input(img, target_height, target_width, warning_msg):
-    with pytest.warns(UserWarning, match=warning_msg):
-        result = seam_carve(img, target_height, target_width)
-
-
-# Edge case 3: target width and height are 1, expect warnings
+# Edge case 2: target width and height are 1, expect warnings
 @pytest.mark.parametrize("img, target_height, target_width, warning_msg", [
     (np.random.rand(5, 8, 3), 1, 1, "Warning! Resizing to a single pixel."),
     (np.random.rand(10, 4, 3), 1, 1, "Warning! Resizing to a single pixel."),
     (np.random.rand(20, 15, 3), 1, 1, "Warning! Resizing to a single pixel."),
-    (np.random.rand(2, 2, 3), 1, 1, "Warning! Resizing to a single pixel.")
+    (np.random.rand(2, 2, 3), 1, 1, "Warning! Resizing to a single pixel."),
 ])
 def test_seam_carve_single_pixel_target_warning(img, target_height, target_width, warning_msg):
     with pytest.warns(UserWarning, match=warning_msg):
         result = seam_carve(img, target_height, target_width)
 
 
-@pytest.mark.parametrize("img, target_height, target_width, expected_array", [
-    (input_1, 1, 1, output_1_3),
-    (input_3, 1, 1, output_3),
+@pytest.mark.parametrize("img, target_height, target_width, expected_array, warning_msg", [
+    (input_1, 1, 1, output_1_3, "Warning! Resizing to a single pixel."),
+    (input_3, 1, 1, output_3, "Warning! Resizing to a single pixel.")
 ])
-def test_seam_carve_single_pixel_target_output(img, target_height, target_width, expected_array):
-    result = seam_carve(img, target_height, target_width)
-    np.testing.assert_array_equal(result, expected_array)
+def test_seam_carve_single_pixel_target_output(img, target_height, target_width, expected_array, warning_msg):
+    with pytest.warns(UserWarning, match=warning_msg):
+        result = seam_carve(img, target_height, target_width)
+        np.testing.assert_array_equal(result, expected_array)
 
 
-# Edge case 4: seam carving with significant resizing, expect warnings
+# Edge case 3: seam carving with significant resizing, expect warnings
 @pytest.mark.parametrize("img, target_height, target_width, warning_msg", [
     (np.random.rand(202, 40, 3), 2, 30, "Significant resizing is required. It may take a long while."),
     (np.random.rand(10, 300, 3), 5, 100, "Significant resizing is required. It may take a long while."),
@@ -102,7 +94,7 @@ def test_seam_carve_significant_resizing(img, target_height, target_width, warni
     ([[]], 5, 5, TypeError, "Image format must be a numpy array."),
     (np.random.rand(10, 10), 5, 5, ValueError, "Input image must be a 3D numpy array with 3 channels."),
     (np.random.rand(10, 10, 2), 5, 5, ValueError, "Input image must be a 3D numpy array with 3 channels."),
-    (np.random.rand(10, 10, 4), 5, 5, ValueError, "Input image must be a 3D numpy array with 3 channels."),
+    (np.random.rand(10, 10, 4), 5, 5, ValueError, "Input image must be a 3D numpy array with 3 channels.")
 ])
 def test_seam_carve_invalid_image_type(img, target_height, target_width, error_type, error_msg):
     with pytest.raises(error_type, match=error_msg):
