@@ -12,7 +12,7 @@ def img_dict():
     img_dict = {
         "img_rgb": np.full((5, 5, 3), [100, 150, 200], dtype=np.uint8),  # Creates a 5x5 RGB image with same values,
         "img_gray": np.full((5, 5), 100, dtype=np.uint8),  # Creates a 5x5 grayscale image with value 100 for all pixels
-        "expected_rgb_to_gray": np.full((5, 5), 150, dtype=np.uint8),  # Averaging RGB values
+        "expected_rgb_to_gray": np.full((5, 5), 141, dtype=np.uint8),  # Averaging RGB values
         "expected_gray_to_rgb": np.full((5, 5, 3), [100, 100, 100], dtype=np.uint8),  # Grayscale to RGB conversion
         "expected_rgb_swap": np.full((5, 5, 3), [200, 150, 100], dtype=np.uint8),  # Swap Red and Blue channels
         "expected_rgb_extract": np.full((5, 5, 2), [100, 150], dtype=np.uint8),  # Extract Red and Green channels
@@ -24,7 +24,6 @@ def img_dict():
 @pytest.mark.parametrize(
     "test_img, mode, ch_swap, ch_extract, expected_output",
     [
-        ("img_rgb", 'as-is', None, None, "img_rgb"),  # No conversion needed. Image as-is.
         ("img_gray", 'rgb', None, None, "expected_gray_to_rgb"),  # Grayscale image to RGB
         ("img_rgb", 'gray', None, None, "expected_rgb_to_gray"),  # RGB image to grayscale
         ("img_rgb", 'as-is', (2, 1, 0), None, "expected_rgb_swap"),  # Swap Red and Blue channels
@@ -54,28 +53,35 @@ def warn_msg():
     Provides the common warnings for the edge test cases.
     """
     warn_msg = {
+        "user_warn_no_change": "Mode is 'as-is' and no channel operations are specified. Return the original image.",
         "user_warn_rgb": "Input is already RGB. No conversion needed.",
         "user_warn_gray": "Input is already grayscale. No conversion needed.",
         "user_warn_swap_extr": "Grayscale images have no channels to swap or extract.",
-        "user_warn_len_0": "No channels specified for extraction. Returning the image as-is."
+        "user_warn_len_0": "No channels specified for ch_extract. Return the output image with no extraction.",
+        "user_warn_swap_default": "Input is in default channel order. No swap needed."
     }
     return warn_msg
 
 @pytest.mark.parametrize(
     "test_img, mode, ch_swap, ch_extract, expected_output, expected_warning, msg_key",
     [
-        # Scenario 1: No change needed when input and conversion mode the same
+        # Scenario 1: No change when mode is 'as-is' with no optional arguments
+        ("img_rgb", 'as-is', None, None, "img_rgb", UserWarning, "user_warn_no_change"),
+        
+        # Scenario 2: No change needed when input and conversion mode the same
         ("img_rgb", 'rgb', None, None, "img_rgb", UserWarning, "user_warn_rgb"),  # RGB to RGB 
         ("img_gray", 'gray', None, None, "img_gray", UserWarning, "user_warn_gray"),  # Grayscale to Grayscale 
 
-        # Scenario 2: Grayscale not qualified for color swap or extraction
+        # Scenario 3: Grayscale not qualified for color swap or extraction
         ("img_gray", 'as-is', [2, 1, 0], None, "img_gray", UserWarning, "user_warn_swap_extr"),
         ("img_rgb", 'gray', None, [0, 1], "expected_rgb_to_gray", UserWarning, "user_warn_swap_extr"),
         
-        # Scenario 3: Empty `ch_extract` tuple or list
+        # Scenario 4: Empty `ch_extract` tuple or list
         ("img_rgb", 'as-is', None, (), "img_rgb", UserWarning, "user_warn_len_0"),  
-        ("img_rgb", 'as-is', [2, 1, 0], [], "expected_rgb_swap", UserWarning, "user_warn_len_0"),  
+        ("img_rgb", 'as-is', [2, 1, 0], [], "expected_rgb_swap", UserWarning, "user_warn_len_0"), 
 
+        # Scenario 5: Default channel order selected for ch_swap 
+        ("img_rgb", 'as-is', [0, 1, 2], None, "img_rgb", UserWarning, "user_warn_swap_default") 
     ]
 )
 def test_edge_cases(img_dict, warn_msg, test_img, mode, ch_swap, ch_extract, expected_output, expected_warning, msg_key):
@@ -147,7 +153,7 @@ def error_desc():
         ("img_gray", 'rgb', None, [0.0], TypeError, "type_err_extr_int"),
         ("img_gray", 'rgb', None, (0.1, 1.1), TypeError, "type_err_extr_int"), 
         ("img_gray", 'rgb', None, 'wrong_type', TypeError, "type_err_extr_type"), 
-        # ("img_gray", 'rgb', None, np.array([0, 1]), TypeError, "type_err_extr_type")
+        ("img_gray", 'rgb', None, np.array([0, 1]), TypeError, "type_err_extr_type"),
 
         # 5. Out-of-range length
         ("img_gray", 'rgb', None, [0, 1, 2], ValueError, "value_err_extr_len"),  # Too many elements
