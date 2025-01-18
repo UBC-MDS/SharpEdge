@@ -102,6 +102,11 @@ def modulate_image(img, mode='as-is', ch_swap=None, ch_extract=None):
     if mode not in ['as-is', 'gray', 'rgb']:
         raise ValueError("Invalid mode. Mode must be 'as-is', 'gray' or 'rgb'.")
 
+    # Handle 'as-is' and when no optional arguments
+    if mode == 'as-is' and ch_swap is None and ch_extract is None:
+        warnings.warn("Mode is 'as-is' and no channel operations are specified. Return the original image.", UserWarning)
+        return img
+
     # Handle grayscale mode (2D array) and RGB mode (3D array)
     if mode == 'gray' and len(img.shape) == 2:
         warnings.warn("Input is already grayscale. No conversion needed.", UserWarning)
@@ -118,7 +123,10 @@ def modulate_image(img, mode='as-is', ch_swap=None, ch_extract=None):
     # Convert RGB to grayscale if requested
     if mode == 'gray' and len(img.shape) == 3:
         print("Converting RGB to grayscale...")
-        img = np.mean(img, axis=-1)
+        # use luminosity method
+        img = 0.2989 * img[..., 0] + 0.5870 * img[..., 1] + 0.1140 * img[..., 2]
+        # round to the nearest integer for valid pixel value
+        img = np.round(img).astype(np.uint8)
 
     # Check if the image is grayscale (2D) after conversion
     if len(img.shape) == 2:
@@ -173,7 +181,7 @@ def modulate_image(img, mode='as-is', ch_swap=None, ch_extract=None):
             
             # Handle empty extraction (no extraction)
             if len(ch_extract) == 0:
-                warnings.warn("No channels specified for extraction. Returning the image as-is.", UserWarning)
+                warnings.warn("No channels specified for ch_extract. Return the output image with no extraction.", UserWarning)
                 return img
             
             # Perform channel extraction 
