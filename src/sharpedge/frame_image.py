@@ -33,7 +33,8 @@ def frame_image(img, h_border=20, w_border=20, inside=False, color=0):
     >>> framed_img_rgb = frame_image(img_rgb, h_border=20, w_border=20, inside=False, color=(255, 0, 0))
     """
     # Input validation
-    Utility._input_checker(img)
+    if not Utility._input_checker(img):
+        return
     
     # Warning: when image size is below 3 x 3
     if img.shape[0] < 3 or img.shape[1] < 3:
