@@ -50,11 +50,20 @@ To harness the image processing magic of SharpEdge, follow these steps:
     from sharpedge.seam_carving import seam_carve
     ```
 
-2. Load your image as a NumPy array.
-    
+2. (Optional) Load your image as a NumPy array.
+
       ```python
-      # Load an image from a specific path and convert it to a numpy array
-      img = load_image(img_path)
+      # Ensure that you have matplotlib and numpy installed in your environment
+      import matplotlib.pyplot as plt
+      import numpy as np
+
+      # Load the image from the given path
+      img = plt.imread(PATH_TO_IMAGE)
+
+      # Only execute this conversion for functions other than seam_carve
+      # Convert the loaded image to the range [0, 255] and cast it to np.uint8 
+      # This is necessary for processing images with most functions, but 'seam_carve' handles float inputs directly
+      img = np.round(np.clip(img * 255, 0, 255)).astype(np.uint8)
       ```
 
 3. Process your images using the available functions:
@@ -100,13 +109,6 @@ To harness the image processing magic of SharpEdge, follow these steps:
         resized_img = seam_carve(img, target_height=300, target_width=400)
         ```
 
-4. Display your modified image.
-    
-      ```python
-      # Display the numpy array as an image
-      display_image(repositioned_img)
-      ```
-      
 ## Contributors
 
 Archer Liu, Hankun Xiao, Inder Khera, Jenny Zhang (ordered alphabetically)
