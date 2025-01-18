@@ -23,6 +23,22 @@ def test_valid_image_format(valid_array):
     except Exception as e:
         pytest.fail(f"Valid data raised an error: {e}")
 
+# Edge Cases
+
+@pytest.mark.parametrize("valid_array", [
+    np.array([[0, 0], [0, 0]]),  # Gray-scale images of 0s
+    np.array([[255, 255], [255, 255]]),  # Gray-scale images of 255s
+    np.array([[255, 255], [255, 255]]),  # Gray-scale images of 0s and 255s
+    np.array([[[0, 0, 0], [0, 0, 0]]]),  # 3D images of 255s
+    np.array([[[255, 255, 255], [255, 255, 255]]]),  # 3D images of 255s
+    np.array([[[0, 0, 0], [255, 255, 255]]]),  # 3D images of 0s and 255s
+])
+def test_valid_image_format(valid_array):
+    try:
+        assert Utility._input_checker(valid_array) == True
+    except Exception as e:
+        pytest.fail(f"Valid data raised an error: {e}")
+
 # Erroneous Cases
 
 # Part 1: erroneous input array format
