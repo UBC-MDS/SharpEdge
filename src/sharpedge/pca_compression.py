@@ -44,8 +44,7 @@ def pca_compression(img, preservation_rate=0.9):
     >>> compressed_img = pca_compression(img)
     """
     # Validate Input
-    if not Utility._input_checker(img):
-        return
+    Utility._input_checker(img)
     if img.ndim != 2:
         raise ValueError("Input image must be a 2D array.")
     if not isinstance(preservation_rate, (int, float)):
