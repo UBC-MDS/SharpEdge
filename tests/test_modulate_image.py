@@ -12,7 +12,7 @@ def img_dict():
     img_dict = {
         "img_rgb": np.full((5, 5, 3), [100, 150, 200], dtype=np.uint8),  # Creates a 5x5 RGB image with same values,
         "img_gray": np.full((5, 5), 100, dtype=np.uint8),  # Creates a 5x5 grayscale image with value 100 for all pixels
-        "expected_rgb_to_gray": np.full((5, 5), 141, dtype=np.uint8),  # Averaging RGB values
+        "expected_rgb_to_gray": np.full((5, 5), 150, dtype=np.uint8),  # Averaging RGB values
         "expected_gray_to_rgb": np.full((5, 5, 3), [100, 100, 100], dtype=np.uint8),  # Grayscale to RGB conversion
         "expected_rgb_swap": np.full((5, 5, 3), [200, 150, 100], dtype=np.uint8),  # Swap Red and Blue channels
         "expected_rgb_extract": np.full((5, 5, 2), [100, 150], dtype=np.uint8),  # Extract Red and Green channels
