@@ -1,7 +1,7 @@
 import numpy as np
 from sharpedge._utils.utility import Utility
 
-def pooling_image(img, window_size, func=np.mean):
+def pooling_image(img, window_size, pooling_method=np.mean):
     """
     Perform pooling on an image using a specified window size and pooling function.
     
@@ -15,9 +15,9 @@ def pooling_image(img, window_size, func=np.mean):
     
     window_size (int): The size of the pooling window (e.g., 10 for 10x10 windows). 
                                         
-    func (callable, optional): The pooling function that will be used on each window. 
-                                Common functions used are np.mean, np.median, np.max, np.min.
-                                Default is np.mean.
+    pooling_method (callable, optional): The pooling function that will be used on each window. 
+                                         Common functions used are np.mean, np.median, np.max, np.min.
+                                         Default is np.mean.
         
 
     Returns:
@@ -26,19 +26,20 @@ def pooling_image(img, window_size, func=np.mean):
     
     Examples:
     >>> img = np.random.rand(100, 100)
-    >>> pooled_img = pooling_image(img, window_size=10, func=np.mean)
-    >>> pooled_img = pooling_image(img_rgb, window_size=20, func=np.max)
+    >>> pooled_img = pooling_image(img, window_size=10, pooling_method=np.mean)
+    >>> pooled_img = pooling_image(img_rgb, window_size=20, pooling_method=np.max)
     """
-    #Input validation
+    # Input validation
     Utility._input_checker(img)
 
     if not isinstance(window_size, int):
         raise TypeError("window_size must be an integer.")
-    
+    # Ensure image is in float32 format for calculations
     img = img.astype(np.float32)  
 
     rows, cols = img.shape[:2]
-    channels = img.shape[2] if img.ndim == 3 else 1
+    # Determine channels based on image type (RGB or grayscale)
+    channels = img.shape[2] if img.ndim == 3 else 1 
 
     # Check if the image dimensions are divisible by the window size
     if rows % window_size != 0 or cols % window_size != 0:
@@ -49,17 +50,19 @@ def pooling_image(img, window_size, func=np.mean):
     result_cols = cols // window_size
 
     if img.ndim == 2:  # Grayscale image
+         # Initialize pooled image
         pooled_image = np.zeros((result_rows, result_cols))
-        for i in range(result_rows):
+        for i in range(result_rows): # Iterate over each row of pooling windows
             for j in range(result_cols):
                 window = img[i*window_size:(i+1)*window_size, j*window_size:(j+1)*window_size]
-                pooled_image[i, j] = func(window)
+                pooled_image[i, j] = pooling_method(window)
     else:  # RGB image
+         # Initialize pooled image
         pooled_image = np.zeros((result_rows, result_cols, channels))
-        for i in range(result_rows):
+        for i in range(result_rows): # Iterate over each row of pooling windows
             for j in range(result_cols):
                 window = img[i*window_size:(i+1)*window_size, j*window_size:(j+1)*window_size, :]
                 for c in range(channels):
-                    pooled_image[i, j, c] = func(window[:, :, c])
+                    pooled_image[i, j, c] = pooling_method(window[:, :, c])
 
     return pooled_image
