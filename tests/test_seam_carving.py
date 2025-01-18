@@ -37,7 +37,7 @@ def test_seam_carve_expected_shape(img, target_height, target_width, expected_sh
 def test_seam_carve_expected_array(img, target_height, target_width, expected_array):
     result = seam_carve(img, target_height, target_width)
     if expected_array.size > 0:
-        np.testing.assert_array_almost_equal(result, expected_array)
+        np.testing.assert_array_equal(result, expected_array)
 
 
 # Edge cases
@@ -79,7 +79,7 @@ def test_seam_carve_single_pixel_target_warning(img, target_height, target_width
 ])
 def test_seam_carve_single_pixel_target_output(img, target_height, target_width, expected_array):
     result = seam_carve(img, target_height, target_width)
-    np.testing.assert_array_almost_equal(result, expected_array)
+    np.testing.assert_array_equal(result, expected_array)
 
 
 # Edge case 4: seam carving with significant resizing, expect warnings
