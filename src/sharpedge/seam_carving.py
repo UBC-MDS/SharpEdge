@@ -257,6 +257,14 @@ def seam_carve(img, target_height, target_width):
     >>> print(resized_img.shape)
     (3, 3, 3)
     """
+    # Validate input image format: must be a numpy array
+    if not isinstance(img, np.ndarray):
+        raise TypeError("Image format must be a numpy array.")
+
+    # Check if the array is empty or contains zero-sized dimensions
+    if img.size == 0 or any(dim == 0 for dim in img.shape):
+        raise ValueError("Image size must not be zero in any dimension.")
+
     # Validate input image dimensions
     if img.ndim != 3 or img.shape[2] != 3:
         raise ValueError("Input image must be a 3D numpy array with 3 channels.")
