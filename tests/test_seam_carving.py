@@ -93,14 +93,18 @@ def test_seam_carve_significant_resizing(img, target_height, target_width, warni
 
 
 # Erroneous Cases
-# Error case 1: invalid image that does not have 3 channels
-@pytest.mark.parametrize("img, target_height, target_width, error_msg", [
-    (np.random.rand(10, 10), 5, 5, "Input image must be a 3D numpy array with 3 channels."),
-    (np.random.rand(10, 10, 2), 5, 5, "Input image must be a 3D numpy array with 3 channels."),
-    (np.random.rand(10, 10, 4), 5, 5, "Input image must be a 3D numpy array with 3 channels."),
+# Error case 1: invalid image
+@pytest.mark.parametrize("img, target_height, target_width, error_type, error_msg", [
+    ("not_an_array", 5, 5, TypeError, "Image format must be a numpy array."),
+    (12345, 5, 5, TypeError, "Image format must be a numpy array."),
+    (None, 5, 5, TypeError, "Image format must be a numpy array."),
+    ([[]], 5, 5, TypeError, "Image format must be a numpy array."),
+    (np.random.rand(10, 10), 5, 5, ValueError, "Input image must be a 3D numpy array with 3 channels."),
+    (np.random.rand(10, 10, 2), 5, 5, ValueError, "Input image must be a 3D numpy array with 3 channels."),
+    (np.random.rand(10, 10, 4), 5, 5, ValueError, "Input image must be a 3D numpy array with 3 channels."),
 ])
-def test_seam_carve_invalid_image_type(img, target_height, target_width, error_msg):
-    with pytest.raises(ValueError, match=error_msg):
+def test_seam_carve_invalid_image_type(img, target_height, target_width, error_type, error_msg):
+    with pytest.raises(error_type, match=error_msg):
         result = seam_carve(img, target_height, target_width)
 
 
@@ -114,6 +118,10 @@ def test_seam_carve_invalid_image_type(img, target_height, target_width, error_m
     (np.random.rand(10, 10, 3), 7, (1, 2, 3), "Target dimensions must be integers."),
     (np.random.rand(10, 10, 3), 7, 0, "Target width must be at least 1."),
     (np.random.rand(10, 10, 3), -5, 8, "Target height must be at least 1."),
+    (np.empty((0, 10, 3)), 5, 5, "Image size must not be zero in any dimension."),
+    (np.empty((10, 0, 3)), 5, 5, "Image size must not be zero in any dimension."),
+    (np.empty((10, 10, 0)), 5, 5, "Image size must not be zero in any dimension."),
+    (np.empty((0, 0, 3)), 5, 5, "Image size must not be zero in any dimension."),
 ])
 def test_seam_carve_invalid_target_dimensions(img, target_height, target_width, error_msg):
     with pytest.raises(ValueError, match=error_msg):
@@ -128,4 +136,4 @@ def test_seam_carve_invalid_target_dimensions(img, target_height, target_width, 
 def test_seam_carve_target_height_exceeds_original(img, target_height, target_width, error_msg):
     """Test seam carving with target height exceeding original height."""
     with pytest.raises(ValueError, match=error_msg):
-        seam_carve(img, target_height, target_width)
+        result = seam_carve(img, target_height, target_width)
