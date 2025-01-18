@@ -7,6 +7,7 @@ from sharpedge.seam_carving import seam_carve
 test_image_dir = os.path.join(os.path.dirname(__file__), "test_image")
 
 # Test data
+# Image input_1 is sourced from DSCI 512: Algorithms and Data Structures Lab 4
 input_1 = plt.imread(os.path.join(test_image_dir, "seam_carve_input_1.png"))[:, :, :3]
 input_2 = plt.imread(os.path.join(test_image_dir, "seam_carve_input_2.png"))[:, :, :3]
 input_3 = plt.imread(os.path.join(test_image_dir, "seam_carve_input_3.png"))[:, :, :3]
