@@ -13,15 +13,22 @@ def test_valid_pooling(img, window_size, pooling_method, expected):
     result = pooling_image(img, window_size, pooling_method)
     assert np.array_equal(result, expected), f"Expected {expected}, got {result}"
 
-# Edge cases: Single-pixel output, very small input sizes
+# Edge cases: Single-pixel output, very small input sizes, non-square images
 @pytest.mark.parametrize("img, window_size, pooling_method, expected", [
     (np.array([[10]]), 1, np.mean, np.array([[10]])),  # Single pixel, no change
     (np.array([[5, 15], [10, 20]]), 2, np.mean, np.array([[12.5]])),  # Entire image pooling
     (np.array([[0, 0], [0, 0]]), 2, np.max, np.array([[0]])),  # All-zero image
+    # Rectangular image (valid case), expect reshaping result
+    (np.array([[1, 2, 3], [4, 5, 6]]), 1, np.mean, np.array([[1, 2, 3], [4, 5, 6]])), 
+    # Column vector (valid case), expect reshaping result
+    (np.array([[1], [2], [3]]), 1, np.mean, np.array([[1], [2], [3]])),
+    # Row vector (valid case), expect reshaping result
+    (np.array([[1, 2, 3]]), 1, np.mean, np.array([[1, 2, 3]]))
 ])
 def test_edge_pooling(img, window_size, pooling_method, expected):
     result = pooling_image(img, window_size, pooling_method)
     assert np.array_equal(result, expected), f"Expected {expected}, got {result}"
+
 
 # Erroneous cases: Testing logic errors not caught by _input_checker
 @pytest.mark.parametrize("img, window_size, pooling_method, expected_error", [
@@ -33,3 +40,14 @@ def test_edge_pooling(img, window_size, pooling_method, expected):
 def test_erroneous_pooling(img, window_size, pooling_method, expected_error):
     with pytest.raises(expected_error):
         pooling_image(img, window_size, pooling_method)
+
+#Image is not square
+@pytest.mark.parametrize("img, window_size, pooling_method, expected_error", [
+    (np.array([[1, 2, 3], [4, 5, 6]]), 1, np.mean, None),  # Rectangular image (valid case)
+    (np.array([[1], [2], [3]]), 1, np.mean, None),  # Column vector (valid case)
+    (np.array([[1, 2, 3]]), 1, np.mean, None)  # Row vector (valid case)
+])
+def test_non_square_images(img, window_size, pooling_method, expected_error):
+    result = pooling_image(img, window_size, pooling_method)
+    assert result is not None, f"Expected a result for non-square image"
+
