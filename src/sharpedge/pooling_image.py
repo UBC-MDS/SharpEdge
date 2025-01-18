@@ -30,7 +30,8 @@ def pooling_image(img, window_size, pooling_method=np.mean):
     >>> pooled_img = pooling_image(img_rgb, window_size=20, pooling_method=np.max)
     """
     # Input validation
-    Utility._input_checker(img)
+    if not Utility._input_checker(img):
+        return
 
     if not isinstance(window_size, int):
         raise TypeError("window_size must be an integer.")
