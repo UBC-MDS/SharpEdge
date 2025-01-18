@@ -33,3 +33,22 @@ def test_edge_pooling(img, window_size, pooling_method, expected):
 def test_erroneous_pooling(img, window_size, pooling_method, expected_error):
     with pytest.raises(expected_error):
         pooling_image(img, window_size, pooling_method)
+
+# New tests: Image dimensions not divisible by window_size
+@pytest.mark.parametrize("img, window_size, pooling_method, expected_error", [
+    (np.array([[1, 2, 3], [4, 5, 6]]), 4, np.mean, ValueError),  # Height not divisible by window size
+    (np.array([[1, 2], [3, 4], [5, 6]]), 2, np.mean, ValueError),  # Width not divisible by window size
+])
+def test_non_divisible_dimensions(img, window_size, pooling_method, expected_error):
+    with pytest.raises(expected_error):
+        pooling_image(img, window_size, pooling_method)
+
+# New tests: Image is not square
+@pytest.mark.parametrize("img, window_size, pooling_method, expected_error", [
+    (np.array([[1, 2, 3], [4, 5, 6]]), 2, np.mean, ValueError),  # Rectangular image
+    (np.array([[1], [2], [3]]), 1, np.mean, ValueError),  # Column vector
+    (np.array([[1, 2, 3]]), 1, np.mean, ValueError)  # Row vector
+])
+def test_non_square_images(img, window_size, pooling_method, expected_error):
+    with pytest.raises(expected_error):
+        pooling_image(img, window_size, pooling_method)
