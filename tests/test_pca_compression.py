@@ -22,9 +22,9 @@ def test_valid_inputs(input_img, preservation_rate, expected_output):
 
 # Edge Cases:
 @pytest.mark.parametrize("img, preservation_rate, warning_message", [
-    (np.ones((100, 100)), 0.05, "Very low preservation_rate may result in significant quality loss."),
-    (np.ones((99, 101)), 0.01, "Very low preservation_rate may result in significant quality loss."),
-    (np.ones((98, 102)), 0.09, "Very low preservation_rate may result in significant quality loss."),
+    (np.ones((100, 100), dtype=int), 0.05, "Very low preservation_rate may result in significant quality loss."),
+    (np.ones((99, 101), dtype=int), 0.01, "Very low preservation_rate may result in significant quality loss."),
+    (np.ones((98, 102), dtype=int), 0.09, "Very low preservation_rate may result in significant quality loss."),
 ])
 def test_low_preservation_rate_warning(img, preservation_rate, warning_message):
     """Test that a warning is raised for very low preservation_rate (< 0.1)."""
@@ -34,13 +34,13 @@ def test_low_preservation_rate_warning(img, preservation_rate, warning_message):
 # Error Cases:
 @pytest.mark.parametrize("img, preservation_rate, expected_exception, expected_message", [
     # Invalid preservation_rate type
-    (np.ones((100, 100)), "0.5", TypeError, "preservation_rate must be a number."),
+    (np.ones((100, 100), dtype=int), "0.5", TypeError, "preservation_rate must be a number."),
     # Negative preservation_rate
-    (np.ones((100, 100)), -0.1, ValueError, "preservation_rate must be a float between 0 and 1."),
+    (np.ones((100, 100), dtype=int), -0.1, ValueError, "preservation_rate must be a float between 0 and 1."),
     # preservation_rate larger than 1
-    (np.ones((100, 100)), 1.1, ValueError, "preservation_rate must be a float between 0 and 1."),
+    (np.ones((100, 100), dtype=int), 1.1, ValueError, "preservation_rate must be a float between 0 and 1."),
     # Non-2D input
-    (np.ones((100, 100, 3)), 0.5, ValueError, "Input image must be a 2D array."),
+    (np.ones((100, 100, 3), dtype=int), 0.5, ValueError, "Input image must be a 2D array."),
 ])
 def test_invalid_preservation_rate_and_input(img, preservation_rate, expected_exception, expected_message):
     """Test invalid preservation_rate values and input image shapes."""

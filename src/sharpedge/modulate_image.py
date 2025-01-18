@@ -99,7 +99,8 @@ def modulate_image(img, mode='as-is', ch_swap=None, ch_extract=None):
     
     """
     # Input validation
-    Utility._input_checker(img)
+    if not Utility._input_checker(img):
+        return
     
     # Validate 'mode' input
     if mode not in ['as-is', 'gray', 'rgb']:

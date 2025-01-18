@@ -44,16 +44,14 @@ def pca_compression(img, preservation_rate=0.9):
     >>> compressed_img = pca_compression(img)
     """
     # Validate Input
-    Utility._input_checker(img) 
+    if not Utility._input_checker(img):
+        return
     if img.ndim != 2:
         raise ValueError("Input image must be a 2D array.")
     if not isinstance(preservation_rate, (int, float)):
         raise TypeError("preservation_rate must be a number.")
     if not (0 < preservation_rate <= 1):
         raise ValueError("preservation_rate must be a float between 0 and 1.")
-    if preservation_rate < 0.1:
-        print("Warning: Very low preservation_rate may result in significant quality loss.")
-    
     # Raise a warning for low preservation_rate
     if preservation_rate < 0.1:
         warnings.warn("Very low preservation_rate may result in significant quality loss.", UserWarning)
