@@ -1,5 +1,6 @@
 import numpy as np
 import warnings
+from sharpedge._utils.utility import Utility
 
 def modulate_image(img, mode='as-is', ch_swap=None, ch_extract=None):
     """
@@ -97,7 +98,9 @@ def modulate_image(img, mode='as-is', ch_swap=None, ch_extract=None):
     swapped_image = modulate_image(rgb_image, ch_swap=(2, 0, 1))
     
     """
-
+    # Input validation
+    Utility._input_checker(img)
+    
     # Validate 'mode' input
     if mode not in ['as-is', 'gray', 'rgb']:
         raise ValueError("Invalid mode. Mode must be 'as-is', 'gray' or 'rgb'.")
