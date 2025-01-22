@@ -121,13 +121,15 @@ def modulate_image(img, mode='as-is', ch_swap=None, ch_extract=None):
     # Convert grayscale to RGB if requested
     if mode == 'rgb' and len(img.shape) == 2:
         print("Converting grayscale to RGB...")
-        img = np.stack([img] * 3, axis=-1)
-
+        img = np.stack([img] * 3, axis=-1) 
     # Convert RGB to grayscale if requested
-    if mode == 'gray' and len(img.shape) == 3:
+    elif mode == 'gray' and len(img.shape) == 3:
         print("Converting RGB to grayscale...")
-        img = np.mean(img, axis=-1)
-
+        # Use the luminosity method
+        img = 0.2989 * img[..., 0] + 0.5870 * img[..., 1] + 0.1140 * img[..., 2]
+        # img = np.mean(img, axis=-1)
+        img = np.uint8(img)  # Convert to uint8 type
+    
     # Check if the image is grayscale (2D) after conversion
     if len(img.shape) == 2:
         if ch_swap is not None or ch_extract is not None:
