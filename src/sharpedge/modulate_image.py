@@ -108,31 +108,33 @@ def modulate_image(img, mode='as-is', ch_swap=None, ch_extract=None):
     # Handle 'as-is' and when no optional arguments
     if mode == 'as-is' and ch_swap is None and ch_extract is None:
         warnings.warn("Mode is 'as-is' and no channel operations are specified. Return the original image.", UserWarning)
-        return img
+        # return img
 
     # Handle grayscale mode (2D array) and RGB mode (3D array)
     if mode == 'gray' and len(img.shape) == 2:
         warnings.warn("Input is already grayscale. No conversion needed.", UserWarning)
-        return img
+        # return img
     if mode == 'rgb' and len(img.shape) == 3:
         warnings.warn("Input is already RGB. No conversion needed.", UserWarning)
-        return img
+        # return img
 
     # Convert grayscale to RGB if requested
     if mode == 'rgb' and len(img.shape) == 2:
         print("Converting grayscale to RGB...")
-        img = np.stack([img] * 3, axis=-1)
-
+        img = np.stack([img] * 3, axis=-1) 
     # Convert RGB to grayscale if requested
-    if mode == 'gray' and len(img.shape) == 3:
+    elif mode == 'gray' and len(img.shape) == 3:
         print("Converting RGB to grayscale...")
-        img = np.mean(img, axis=-1)
-
+        # Use the luminosity method
+        img = 0.2989 * img[..., 0] + 0.5870 * img[..., 1] + 0.1140 * img[..., 2]
+        # img = np.mean(img, axis=-1)
+        img = np.uint8(img)  # Convert to uint8 type
+    
     # Check if the image is grayscale (2D) after conversion
     if len(img.shape) == 2:
         if ch_swap is not None or ch_extract is not None:
             warnings.warn("Grayscale images have no channels to swap or extract.", UserWarning)
-        return img  # Return grayscale image
+        # return img  # Return grayscale image
     
     # Proceed with channel manipulations when image is RGB (3D) after conversion
     if len(img.shape) == 3:
@@ -187,6 +189,9 @@ def modulate_image(img, mode='as-is', ch_swap=None, ch_extract=None):
             # Perform channel extraction 
             img = img[..., ch_extract]
 
-
+        # # Return image after ch_swap and ch_extract
+        # return img
+    
     # If no operation is requested, return the original image
+    # Return the final modified image after operations
     return img
