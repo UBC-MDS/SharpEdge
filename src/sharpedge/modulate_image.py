@@ -62,7 +62,7 @@ def modulate_image(img, mode='as-is', ch_swap=None, ch_extract=None):
         A numpy array representing the manipulated image. The output could be:
         - A grayscale image (2D array).
         - An RGB image (3D array).
-        - A subset of RGB channels (e.g., only the Red channel).
+        - A subset of RGB channels as a 3D image, where unextracted channels are set to 0.
         - A rearranged RGB image with swapped channels.
 
     Raises
@@ -186,8 +186,14 @@ def modulate_image(img, mode='as-is', ch_swap=None, ch_extract=None):
                 warnings.warn("No channels specified for ch_extract. Return the output image with no extraction.", UserWarning)
                 return img
             
-            # Perform channel extraction 
-            img = img[..., ch_extract]
+            # Create an image with the same shape as img but all channels set to 0
+            img_init = np.zeros_like(img)
+
+            # Directly assign values to the extracted channels
+            img_init[..., ch_extract] = img[..., ch_extract]
+
+            # Return the modified image with unselected channels set to 0
+            img = img_init
 
         # # Return image after ch_swap and ch_extract
         # return img
