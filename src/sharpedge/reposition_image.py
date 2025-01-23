@@ -41,7 +41,7 @@ def reposition_image(img, flip='none', rotate='up', shift_x=0, shift_y=0):
     >>> repositioned_img = reposition_image(img, flip='horizontal', rotate='left', shift_x=10, shift_y=20)
     >>> repositioned_img = reposition_image(img_rgb, flip='both', rotate='down', shift_x=-5, shift_y=10)
     """
-   # Input validation
+    # Input validation
     Utility._input_checker(img)
 
     # Validate flip

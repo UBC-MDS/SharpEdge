@@ -34,35 +34,38 @@ def pooling_image(img, window_size, pooling_method=np.mean):
 
     if not isinstance(window_size, int):
         raise TypeError("window_size must be an integer.")
+    
+    if not callable(pooling_method):
+        raise TypeError("pooling_method must be callable.")
+    
+    img_rows, img_cols = img.shape[:2]
+
+    # Check if dimensions are divisible by window size
+    if img_rows % window_size != 0 or img_cols % window_size != 0:
+        raise ValueError("Image dimensions are not divisible by the window size.")
+
     # Ensure image is in float32 format for calculations
-    img = img.astype(np.float32)  
+    img = img.astype(np.float32)
 
+    # Recalculate the new rows and columns after cropping (if needed)
     rows, cols = img.shape[:2]
-    # Determine channels based on image type (RGB or grayscale)
-    channels = img.shape[2] if img.ndim == 3 else 1 
-
-    # Check if the image dimensions are divisible by the window size
-    if rows % window_size != 0 or cols % window_size != 0:
-        raise ValueError("Image dimensions must be divisible by the window size.")
 
     # Initialize the result array with appropriate dimensions
     result_rows = rows // window_size
     result_cols = cols // window_size
 
     if img.ndim == 2:  # Grayscale image
-         # Initialize pooled image
         pooled_image = np.zeros((result_rows, result_cols))
-        for i in range(result_rows): # Iterate over each row of pooling windows
+        for i in range(result_rows):
             for j in range(result_cols):
                 window = img[i*window_size:(i+1)*window_size, j*window_size:(j+1)*window_size]
                 pooled_image[i, j] = pooling_method(window)
     else:  # RGB image
-         # Initialize pooled image
-        pooled_image = np.zeros((result_rows, result_cols, channels))
-        for i in range(result_rows): # Iterate over each row of pooling windows
+        pooled_image = np.zeros((result_rows, result_cols, img.shape[2]))
+        for i in range(result_rows):
             for j in range(result_cols):
                 window = img[i*window_size:(i+1)*window_size, j*window_size:(j+1)*window_size, :]
-                for c in range(channels):
+                for c in range(img.shape[2]):
                     pooled_image[i, j, c] = pooling_method(window[:, :, c])
 
     return pooled_image
