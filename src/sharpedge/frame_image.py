@@ -91,8 +91,14 @@ def frame_image(img, h_border=20, w_border=20, inside=False, color=0):
     if inside:
         img = img[h_border:-h_border or None, w_border:-w_border or None, :]
     
-    # Apply padding for both grayscale (converted to RGB) and RGB images
-    framed_img = np.pad(img, ((h_border, h_border), (w_border, w_border), (0, 0)), 'constant', 
-                        constant_values=((color[0], color[0]), (color[1], color[1]), (color[2], color[2])))
+    # Calculate the new shape for the image with the border
+    new_height = img.shape[0] + 2 * h_border
+    new_width = img.shape[1] + 2 * w_border
 
-    return framed_img
+    # Create the border: a full array of the border color
+    frame = np.full((new_height, new_width, 3), color, dtype=np.uint8)
+
+    # Insert the image in the center of the border
+    frame[h_border:h_border + img.shape[0], w_border:w_border + img.shape[1]] = img
+
+    return frame
