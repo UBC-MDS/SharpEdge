@@ -60,9 +60,14 @@ def reposition_image(img, flip='none', rotate='up', shift_x=0, shift_y=0):
     if not isinstance(shift_y, int):
         raise TypeError("shift_y must be an integer.")
 
-    # Get image dimensions
-    img_height, img_width, _ = img.shape  # Account for the color channels
-    
+    # Check if the image is 2D or 3D
+    if len(img.shape) == 2:
+        img_height, img_width = img.shape  # Grayscale image (2D)
+    elif len(img.shape) == 3:
+        img_height, img_width, _ = img.shape  # RGB image (3D)
+    else:
+        raise ValueError("Unsupported image shape")
+
     # Check if shift values are larger than image dimensions and issue a warning if necessary
     if shift_x >= img_width or shift_y >= img_height:
         warnings.warn(f"Shift values ({shift_x}, {shift_y}) are larger than the image dimensions.", UserWarning)
