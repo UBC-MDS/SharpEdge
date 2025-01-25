@@ -5,28 +5,32 @@ def pooling_image(img, window_size, pooling_method=np.mean):
     """
     Perform pooling on an image using a specified window size and pooling function.
 
-    This function reduces the size of an input image by dividing it into non-overlapping 
-    windows of a specified size and applying a pooling function (e.g., mean, max, or min) 
-    to each window.
+    Parameters
+    ----------
+    img : numpy.ndarray
+        The input image as a 2D numpy array (grayscale) or 3D numpy array (RGB).
+    window_size : int
+        The size of the pooling window (e.g., 10 for 10x10 windows).
+    pooling_method : callable, optional
+        The pooling function to apply to each window. Common options include 
+        `numpy.mean`, `numpy.median`, `numpy.max`, and `numpy.min`. Default is `numpy.mean`.
 
-    Parameters:
-    img (ndarray): The input image as a 2D numpy array (grayscale) or 3D numpy 
-                   array (RGB).
-    window_size (int): The size of the pooling window (e.g., 10 for 10x10 windows).
-    pooling_method (callable, optional): The pooling function to apply to each window. 
-                                         Common options include `numpy.mean`, `numpy.median`, 
-                                         `numpy.max`, and `numpy.min`. Default is `numpy.mean`.
+    Returns
+    -------
+    numpy.ndarray
+        The resized image, reduced by the pooling operation based on the specified 
+        window size and pooling function. For grayscale images, the result is a 2D array. 
+        For RGB images, the result is a 3D array normalized to the range [0.0, 1.0].
 
-    Returns:
-    ndarray: The resized image, reduced by the pooling operation based on the specified 
-             window size and pooling function. For grayscale images, the result is a 2D array. 
-             For RGB images, the result is a 3D array normalized to the range [0.0, 1.0].
+    Raises
+    ------
+    TypeError
+        If `window_size` is not an integer or `pooling_method` is not callable.
+    ValueError
+        If the image dimensions are not divisible by the window size.
 
-    Raises:
-    TypeError: If `window_size` is not an integer or `pooling_method` is not callable.
-    ValueError: If the image dimensions are not divisible by the window size.
-
-    Examples:
+    Examples
+    --------
     >>> img = np.random.rand(100, 100)
     >>> pooled_img = pooling_image(img, window_size=10, pooling_method=np.mean)
     >>> pooled_img.shape
