@@ -61,7 +61,7 @@ def reposition_image(img, flip='none', rotate='up', shift_x=0, shift_y=0):
         raise TypeError("shift_y must be an integer.")
 
     # Get image dimensions
-    img_height, img_width = img.shape
+    img_height, img_width, _ = img.shape  # Account for the color channels
     
     # Check if shift values are larger than image dimensions and issue a warning if necessary
     if shift_x >= img_width or shift_y >= img_height:
