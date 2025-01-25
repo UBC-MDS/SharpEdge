@@ -5,41 +5,71 @@ from sharpedge._utils.utility import Utility
 def reposition_image(img, flip='none', rotate='up', shift_x=0, shift_y=0):
     """
     Flip, rotate, and shift an image based on the specified requested action.
-    
+
     This function allows repositioning of an image by applying one or more transformations 
-    i.e. (flipping, rotating, and shifting). Each transformation can be controlled by the respective 
+    (flipping, rotating, and shifting). Each transformation can be controlled by the respective 
     parameters.
+
+    Parameters
+    ----------
+    img : numpy.ndarray
+        The input image as a 2D numpy array (grayscale) or 3D numpy array (RGB).
     
-    Parameters:
-    img (ndarray): The input image as a 2D numpy array (grayscale) or a 3D numpy 
-                   array (RGB).
+    flip : str, optional
+        Argument used to flip the image. It can be:
+        - 'none': No flipping.
+        - 'horizontal': Flip the image horizontally.
+        - 'vertical': Flip the image vertically.
+        - 'both': Flip the image both horizontally and vertically.
+        Default is 'none'.
     
-    flip (str, optional): Argument used to flip image. It can be:
-                         - 'none': No flipping.
-                         - 'horizontal': Flip the image horizontally.
-                         - 'vertical': Flip the image vertically.
-                         - 'both': Flip the image both horizontally and vertically.
-                         Default is 'none'
+    rotate : str, optional
+        Argument used to rotate the image. It can be:
+        - 'up': No rotation.
+        - 'left': Rotate the image 90 degrees counter-clockwise.
+        - 'right': Rotate the image 90 degrees clockwise.
+        - 'down': Rotate the image 180 degrees (flip upside down).
+        Default is 'up'.
     
-    rotate (str, optional): Argument used to rotate image. It can be:
-                           - 'up': No rotation.
-                           - 'left': Rotate the image 90 degrees counter-clockwise.
-                           - 'right': Rotate the image 90 degrees clockwise.
-                           - 'down': Rotate the image 180 degrees (flip upside down).
-                           Default is 'up'
+    shift_x : int, optional
+        Argument used to shift the image along the x-axis. Default is 0.
     
-    shift_x (int, optional): Argument used to shift the image along the x-axis. Default is 0.
+    shift_y : int, optional
+        Argument used to shift the image along the y-axis. Default is 0.
+
+    Returns
+    -------
+    numpy.ndarray
+        The repositioned image that has been flipped, rotated, and/or shifted based on the 
+        parameter values.
+
+    Raises
+    ------
+    ValueError
+        If the input image is not a 2D or 3D numpy array or if the `flip` or `rotate` 
+        arguments are invalid.
     
-    shift_y (int, optional): Argument used to shift the image along the y-axis. Default is 0.
-        
-    Returns:
-    ndarray: The repositioned image that has been flipped, rotated, and/or shifted based on the 
-             parameter values.
-    
-    Examples:
+    TypeError
+        If `shift_x` or `shift_y` is not an integer.
+
+    Warnings
+    --------
+    UserWarning
+        If the shift values are larger than the image dimensions or if resizing causes 
+        unexpected behavior due to large shifts.
+
+    Examples
+    --------
     >>> img = np.random.rand(100, 100)
     >>> repositioned_img = reposition_image(img, flip='horizontal', rotate='left', shift_x=10, shift_y=20)
+    >>> repositioned_img.shape
+    (100, 100)
+
+    For an RGB image:
+    >>> img_rgb = np.random.rand(100, 100, 3)
     >>> repositioned_img = reposition_image(img_rgb, flip='both', rotate='down', shift_x=-5, shift_y=10)
+    >>> repositioned_img.shape
+    (100, 100, 3)
     """
     # Input validation
     Utility._input_checker(img)
