@@ -47,12 +47,9 @@ def pooling_image(img, window_size, pooling_method=np.mean):
     # Ensure image is in float32 format for calculations
     img = img.astype(np.float32)
 
-    # Recalculate the new rows and columns after cropping (if needed)
-    rows, cols = img.shape[:2]
-
     # Initialize the result array with appropriate dimensions
-    result_rows = rows // window_size
-    result_cols = cols // window_size
+    result_rows = img_rows // window_size
+    result_cols = img_cols // window_size
 
     if img.ndim == 2:  # Grayscale image
         pooled_image = np.zeros((result_rows, result_cols))
@@ -67,5 +64,8 @@ def pooling_image(img, window_size, pooling_method=np.mean):
                 window = img[i*window_size:(i+1)*window_size, j*window_size:(j+1)*window_size, :]
                 for c in range(img.shape[2]):
                     pooled_image[i, j, c] = pooling_method(window[:, :, c])
+        
+        # Normalize RGB image to [0.0, 1.0]
+        pooled_image /= 255.0
 
     return pooled_image
