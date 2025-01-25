@@ -4,30 +4,47 @@ from sharpedge._utils.utility import Utility
 def pooling_image(img, window_size, pooling_method=np.mean):
     """
     Perform pooling on an image using a specified window size and pooling function.
-    
-    This function reduces the size of an input image, by dividing the image into non-overlapping 
-    windows of a specified size by implementing a pooling function (e.g., mean, max, or min) to 
-    each window. 
-    
-    Parameters:
-    img (ndarray): The input image as a 2D numpy array (grayscale) or a 3D numpy 
-                   array (RGB).
-    
-    window_size (int): The size of the pooling window (e.g., 10 for 10x10 windows). 
-                                        
-    pooling_method (callable, optional): The pooling function that will be used on each window. 
-                                         Common functions used are np.mean, np.median, np.max, np.min.
-                                         Default is np.mean.
-        
 
-    Returns:
-    ndarray: The resized image that was reshaped based off of respective pooling function and
-             window size.
-    
-    Examples:
+    This function reduces the size of an input image by dividing it into non-overlapping 
+    windows of a specified size and applying a pooling function (e.g., mean, max, or min) 
+    to each window.
+
+    Parameters
+    ----------
+    img : ndarray
+        The input image as a 2D numpy array (grayscale) or a 3D numpy array (RGB).
+    window_size : int
+        The size of the pooling window (e.g., 10 for 10x10 windows).
+    pooling_method : callable, optional
+        The pooling function to apply to each window. Common options include 
+        `numpy.mean`, `numpy.median`, `numpy.max`, and `numpy.min`. Default is `numpy.mean`.
+
+    Returns
+    -------
+    ndarray
+        The resized image, reduced by the pooling operation based on the specified 
+        window size and pooling function. For grayscale images, the result is a 2D array.
+        For RGB images, the result is a 3D array normalized to the range [0.0, 1.0].
+
+    Raises
+    ------
+    TypeError
+        If `window_size` is not an integer or `pooling_method` is not callable.
+    ValueError
+        If the image dimensions are not divisible by the window size.
+
+    Examples
+    --------
     >>> img = np.random.rand(100, 100)
     >>> pooled_img = pooling_image(img, window_size=10, pooling_method=np.mean)
+    >>> pooled_img.shape
+    (10, 10)
+
+    For an RGB image:
+    >>> img_rgb = np.random.rand(100, 100, 3)
     >>> pooled_img = pooling_image(img_rgb, window_size=20, pooling_method=np.max)
+    >>> pooled_img.shape
+    (5, 5, 3)
     """
     # Input validation
     Utility._input_checker(img)
