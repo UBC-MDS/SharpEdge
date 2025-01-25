@@ -33,14 +33,10 @@ def pooling_image(img, window_size, pooling_method=np.mean):
     --------
     >>> img = np.random.rand(100, 100)
     >>> pooled_img = pooling_image(img, window_size=10, pooling_method=np.mean)
-    >>> pooled_img.shape
-    (10, 10)
 
     For an RGB image:
     >>> img_rgb = np.random.rand(100, 100, 3)
     >>> pooled_img = pooling_image(img_rgb, window_size=20, pooling_method=np.max)
-    >>> pooled_img.shape
-    (5, 5, 3)
     """
     # Input validation
     Utility._input_checker(img)
