@@ -1,5 +1,7 @@
 # SharpEdge
 
+[![Documentation Status](https://readthedocs.org/projects/sharpedge/badge/?version=latest)](https://sharpedge.readthedocs.io/en/latest/?badge=latest)
+
 Collection of image processing tools and techniques, including padding, flipping, colorscale conversion, seam carving, and image shrinking. Designed for efficient manipulation and transformation of images.
 
 ## Summary
@@ -7,6 +9,7 @@ Collection of image processing tools and techniques, including padding, flipping
 This package provides a comprehensive set of image processing utilities tailored for seamless integration of image manipulation projects. It includes essential tools for image transformations, seam carving, and processing. This package enables users to efficiently prepare, manipulate and modify image based on the needs of the user. The `sharpedge` package is valuable for users seeking tools for resizing and compressing images while maintaining visual content integrity.
 
 ## Functions
+
 - **`reposition_image`**  
   This function allows you to manipulate the position and orientation of an image by flipping, rotating, or shifting it. You can customize the actions based on your needs, such as horizontal flips, rotation to the left or right, or shifting the image along the X and Y axes.
 
