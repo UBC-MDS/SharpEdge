@@ -96,7 +96,6 @@ def modulate_image(img, mode='as-is', ch_swap=None, ch_extract=None):
 
     # Swap the Red and Blue channels in an RGB image
     swapped_image = modulate_image(rgb_image, ch_swap=(2, 0, 1))
-    
     """
     # Input validation
     Utility._input_checker(img)
