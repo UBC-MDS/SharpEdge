@@ -17,7 +17,9 @@ build:
       - pip install poetry
     post_install:
       - VIRTUAL_ENV=$READTHEDOCS_VIRTUALENV_PATH poetry install
-      - $VIRTUAL_ENV/bin/pip install scikit-image
+      - curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+      - python get-pip.py  # Install pip in the virtual environment
+      - $VIRTUAL_ENV/bin/pip install scikit-image  # Install scikit-image using the newly installed pip
       - python -m ipykernel install --user --name="SharpEdge"
       
 # Build documentation in the "docs/" directory with Sphinx
