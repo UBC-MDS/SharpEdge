@@ -22,18 +22,23 @@ Examples of unacceptable behavior by participants include:
 * Publishing others' private information, such as a physical or electronic address, without explicit permission
 * Other conduct which could reasonably be considered inappropriate in a professional setting
 
-#### Consequences of Unacceptable Behavior
+### Consequences of Unacceptable Behavior
+
 Participants who engage in unacceptable behavior may face the following consequences:
+
 * A verbal or written warning regarding their behavior.
 * Temporary or permanent removal from the project and associated communication channels.
 * Reporting of the behavior to appropriate authorities, depending on the severity of the incident.
 
-#### Procedure for Reporting and Dealing with Unacceptable Behavior
+### Procedure for Reporting and Dealing with Unacceptable Behavior
+
 If you witness or experience behavior that violates this Code of Conduct, please report it as follows:
+
 1. Contact any member of the project team directly through the project's communication platform.
 2. Alternatively, report the incident to us by [email](mailto:yuci21st@student.ubc.ca). All reports will be managed with utmost discretion and confidentiality.
 
 When reporting an incident, please provide the following details:
+
 * Your name and contact information (optional, but providing them is encouraged).
 * A description of the incident, including time, location, and involved parties.
 * Any additional context or evidence to help us understand the situation.
