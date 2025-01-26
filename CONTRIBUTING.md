@@ -4,7 +4,7 @@ SharpEdge is an open source project, and we welcome contributions of all kinds:
 new lessons, fixes to existing material, bug reports,
 and reviews of proposed changes are all welcome.
 
-### Contributor Agreement
+## Contributor Agreement
 
 By contributing, you agree that we may redistribute your work under 
 [our license](./LICENSE). In exchange, we will address your issues and/or assess

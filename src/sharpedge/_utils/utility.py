@@ -1,21 +1,54 @@
-"""
-This module contains utility classes and functions for internal use only.
-
-Validate that all color values in the image are integers and within the correct range (0 to 255).
-    If the image contains any float values or out-of-range values, it will raise a ValueError.
-
-    Parameters:
-    - image (numpy.ndarray): The image array to validate (can be RGB or Grayscale).
-
-    Raises:
-    - ValueError: If any value in the image is invalid (float or out-of-range).
-"""
 import numpy as np
 
 
 class Utility:
+    """
+    This module contains utility classes and functions for internal use only.
+
+    Validate that all color values in the image are integers and within the
+    correct range (0 to 255). If the image contains any float values or
+    out-of-range values, it will raise a ValueError.
+
+    Parameters
+    ----------
+    image : numpy.ndarray
+        The image array to validate (can be RGB or Grayscale).
+
+    Raises
+    ------
+    ValueError
+        If any value in the image is invalid (float or out-of-range).
+    """
     @staticmethod
     def _input_checker(img_array):
+        """
+        Validate the input image array for proper format, shape, and value range.
+
+        This function checks if the input image array meets the following conditions:
+        - It is a NumPy array.
+        - It is either a 2D array (grayscale) or a 3D array with three channels (RGB).
+        - It is non-empty and has no zero-sized dimensions.
+        - It has an integer data type.
+        - All values in the array are within the range [0, 255].
+
+        Parameters
+        ----------
+        img_array : numpy.ndarray
+            The image array to validate.
+
+        Returns
+        -------
+        bool
+            Returns True if all validation checks pass.
+
+        Raises
+        ------
+        TypeError
+            If the input is not a NumPy array or does not have an integer data type.
+        ValueError
+            If the input array is not 2D or 3D with three channels, is empty, has zero-sized dimensions, 
+            or contains values outside the range [0, 255].
+        """
         # Check the image array format: must be a numpy array
         if not isinstance(img_array, np.ndarray):
             raise TypeError("Image format must be a numpy array.")
