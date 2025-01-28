@@ -30,7 +30,7 @@ This package provides a comprehensive set of image processing utilities tailored
 
 ## Where This Fits in the Python Ecosystem
 
-This package fits into the broader Python image ecosystem, along  with packages like [OpenCV](https://opencv.org/) and [Pillow](https://pillow.readthedocs.io/). While OpenCV and Pillow provide a wide range of general-purpose image processing tools, this package instead specializes in content-aware resizing and transformations, focusing on practical utilities for advanced image manipulations. Functions such as seam carving for resizing, PCA-based image compression, and pooling for dimensionality reduction offer unique capabilities that are not directly available in general-purpose libraries. 
+This package fits into the broader Python image ecosystem, along with packages like [OpenCV](https://opencv.org/), [Pillow](https://pillow.readthedocs.io/), and [scikit-learn](https://scikit-learn.org/). While OpenCV and Pillow provide general-purpose image processing tools, and scikit-learn includes PCA for dimensionality reduction, this package stands out for its simplicity and streamlined functionality. It specializes in content-aware resizing and transformations, focusing on practical utilities for advanced image manipulations. It offers unique capabilities, allowing users to accomplish tasks quickly without needing to manage complex parameters.
 
 ## Installation
 
