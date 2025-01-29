@@ -23,8 +23,8 @@ jobs:
       - name: Install package
         run: poetry install
       
-      - name: Install ipykernel "SharpEdge" to avoid NoSuchKernel issue
-        run: python -m ipykernel install --user --name="SharpEdge"
+      - name: Install ipykernel inside poetry env
+        run: poetry run python -m ipykernel install --user --name="sharpedge"
 
       - name: Test with pytest
         run: poetry run pytest tests/ --cov=sharpedge --cov-report=xml
