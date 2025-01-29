@@ -1,5 +1,8 @@
 # CHANGELOG
 
+
+## v1.1.1 (2025-01-29)
+
 ### Bug Fixes
 
 - Try to fix NoSuchKernel
@@ -10,8 +13,14 @@
 
 ### Build System
 
+- Changelog update to reflect delete of release
+  ([`397f182`](https://github.com/UBC-MDS/SharpEdge/commit/397f182069ab6678227b4420f143b37f2cdf44e7))
+
 - Updated ci-cd.yml for RELEASE_TOKEN
   ([`2762745`](https://github.com/UBC-MDS/SharpEdge/commit/2762745abe081df88183ecc5b75f3cb1d791858f))
+
+
+## v0.0.2 (2025-01-27)
 
 ### Bug Fixes
 
