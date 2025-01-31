@@ -1,6 +1,15 @@
 # CHANGELOG
 
 
+## v1.1.2 (2025-01-31)
+
+### Bug Fixes
+
+- Feedback addressed by Archer - Milestone 1 feedback on Software package project structure
+  (simplify user import)
+  ([`d6ad822`](https://github.com/UBC-MDS/SharpEdge/commit/d6ad822876179a089a3e062bdba7a0870c89e849))
+
+
 ## v1.1.1 (2025-01-29)
 
 ### Bug Fixes
