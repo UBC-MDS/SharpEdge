@@ -19,6 +19,7 @@ def modulate_image(img, mode='as-is', ch_swap=None, ch_extract=None):
 
     Parameters
     ----------
+    
     img : numpy.ndarray
         Input image array. This can be either a 2D numpy array (grayscale image) or a 3D numpy array 
         (RGB image). The dimensions of the image should be (height, width) for grayscale or 
@@ -58,6 +59,7 @@ def modulate_image(img, mode='as-is', ch_swap=None, ch_extract=None):
 
     Returns
     -------
+    
     numpy.ndarray
         A numpy array representing the manipulated image. The output could be:
         - A grayscale image (2D array).
@@ -67,12 +69,14 @@ def modulate_image(img, mode='as-is', ch_swap=None, ch_extract=None):
 
     Raises
     ------
+    
     ValueError
         If the input image is not in grayscale or RGB format, or if any invalid channel indices are 
         provided for extraction or swapping.
 
     Notes
     ------
+    
     - Grayscale images (2D arrays) do not have multiple color channels, so channel extraction or 
       swapping will not be possible. These operations will be skipped with a corresponding notification.
     - If no operations are specified (i.e., no conversion or channel manipulation), the function will
@@ -82,6 +86,7 @@ def modulate_image(img, mode='as-is', ch_swap=None, ch_extract=None):
       
     Examples
     --------
+    
     # Convert an RGB image to grayscale
     grayscale_image = modulate_image(rgb_image, mode='gray')
 

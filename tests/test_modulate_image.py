@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 import warnings
-from sharpedge.modulate_image import modulate_image
+from sharpedge import modulate_image
 
 @pytest.fixture
 def img_dict():
