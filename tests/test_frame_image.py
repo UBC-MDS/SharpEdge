@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from sharpedge.frame_image import frame_image  
+from sharpedge import frame_image  
 
 # Expected Test Cases:
 @pytest.mark.parametrize("valid_img, h_border, w_border, inside, color, expected_size", [

@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 import warnings
-from sharpedge.reposition_image import reposition_image
+from sharpedge import reposition_image
 
 # Defining fixture for the test image
 @pytest.fixture

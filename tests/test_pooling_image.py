@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from sharpedge.pooling_image import pooling_image
+from sharpedge import pooling_image
 
 # Valid cases: Testing pooling behavior with different pooling functions
 @pytest.mark.parametrize("img, window_size, pooling_method, expected", [
