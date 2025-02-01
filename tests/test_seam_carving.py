@@ -2,7 +2,7 @@ import os
 import numpy as np
 import pytest
 import matplotlib.pyplot as plt
-from sharpedge.seam_carving import seam_carve
+from sharpedge import seam_carve
 
 test_image_dir = os.path.join(os.path.dirname(__file__), "test_image")
 

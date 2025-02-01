@@ -4,29 +4,38 @@ from sharpedge._utils.utility import Utility
 def pooling_image(img, window_size, pooling_method=np.mean):
     """
     Perform pooling on an image using a specified window size and pooling function.
-    
-    This function reduces the size of an input image, by dividing the image into non-overlapping 
-    windows of a specified size by implementing a pooling function (e.g., mean, max, or min) to 
-    each window. 
-    
-    Parameters:
-    img (ndarray): The input image as a 2D numpy array (grayscale) or a 3D numpy 
-                   array (RGB).
-    
-    window_size (int): The size of the pooling window (e.g., 10 for 10x10 windows). 
-                                        
-    pooling_method (callable, optional): The pooling function that will be used on each window. 
-                                         Common functions used are np.mean, np.median, np.max, np.min.
-                                         Default is np.mean.
-        
 
-    Returns:
-    ndarray: The resized image that was reshaped based off of respective pooling function and
-             window size.
-    
-    Examples:
+    Parameters
+    ----------
+    img : numpy.ndarray
+        The input image as a 2D numpy array (grayscale) or 3D numpy array (RGB).
+    window_size : int
+        The size of the pooling window (e.g., 10 for 10x10 windows).
+    pooling_method : callable, optional
+        The pooling function to apply to each window. Common options include 
+        `numpy.mean`, `numpy.median`, `numpy.max`, and `numpy.min`. Default is `numpy.mean`.
+
+    Returns
+    -------
+    numpy.ndarray
+        The resized image, reduced by the pooling operation based on the specified 
+        window size and pooling function. For grayscale images, the result is a 2D array. 
+        For RGB images, the result is a 3D array normalized to the range [0.0, 1.0].
+
+    Raises
+    ------
+    TypeError
+        If `window_size` is not an integer or `pooling_method` is not callable.
+    ValueError
+        If the image dimensions are not divisible by the window size.
+
+    Examples
+    --------
     >>> img = np.random.rand(100, 100)
     >>> pooled_img = pooling_image(img, window_size=10, pooling_method=np.mean)
+
+    For an RGB image:
+    >>> img_rgb = np.random.rand(100, 100, 3)
     >>> pooled_img = pooling_image(img_rgb, window_size=20, pooling_method=np.max)
     """
     # Input validation
@@ -47,12 +56,9 @@ def pooling_image(img, window_size, pooling_method=np.mean):
     # Ensure image is in float32 format for calculations
     img = img.astype(np.float32)
 
-    # Recalculate the new rows and columns after cropping (if needed)
-    rows, cols = img.shape[:2]
-
     # Initialize the result array with appropriate dimensions
-    result_rows = rows // window_size
-    result_cols = cols // window_size
+    result_rows = img_rows // window_size
+    result_cols = img_cols // window_size
 
     if img.ndim == 2:  # Grayscale image
         pooled_image = np.zeros((result_rows, result_cols))
@@ -67,5 +73,8 @@ def pooling_image(img, window_size, pooling_method=np.mean):
                 window = img[i*window_size:(i+1)*window_size, j*window_size:(j+1)*window_size, :]
                 for c in range(img.shape[2]):
                     pooled_image[i, j, c] = pooling_method(window[:, :, c])
+        
+        # Normalize RGB image to [0.0, 1.0]
+        pooled_image /= 255.0
 
     return pooled_image

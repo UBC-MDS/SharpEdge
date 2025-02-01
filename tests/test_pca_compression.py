@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from sharpedge.pca_compression import pca_compression
+from sharpedge import pca_compression
 
 # Expected Test Cases
 @pytest.mark.parametrize("input_img, preservation_rate, expected_output", [

@@ -11,8 +11,8 @@ image_reposition.ipynb
 image_framing.ipynb
 image_modulation.ipynb
 image_pooling.ipynb
-pca_compression.ipynb
-seam_carving.ipynb
+image_pca_compression.ipynb
+image_seam_carving.ipynb
 ```
 
 ```{toctree}

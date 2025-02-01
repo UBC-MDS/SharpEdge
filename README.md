@@ -1,5 +1,7 @@
 # SharpEdge
 
+[![Documentation Status](https://readthedocs.org/projects/sharpedge/badge/?version=latest)](https://sharpedge.readthedocs.io/en/latest/?badge=latest)
+
 Collection of image processing tools and techniques, including padding, flipping, colorscale conversion, seam carving, and image shrinking. Designed for efficient manipulation and transformation of images.
 
 ## Summary
@@ -7,6 +9,7 @@ Collection of image processing tools and techniques, including padding, flipping
 This package provides a comprehensive set of image processing utilities tailored for seamless integration of image manipulation projects. It includes essential tools for image transformations, seam carving, and processing. This package enables users to efficiently prepare, manipulate and modify image based on the needs of the user. The `sharpedge` package is valuable for users seeking tools for resizing and compressing images while maintaining visual content integrity.
 
 ## Functions
+
 - **`reposition_image`**  
   This function allows you to manipulate the position and orientation of an image by flipping, rotating, or shifting it. You can customize the actions based on your needs, such as horizontal flips, rotation to the left or right, or shifting the image along the X and Y axes.
 
@@ -27,7 +30,7 @@ This package provides a comprehensive set of image processing utilities tailored
 
 ## Where This Fits in the Python Ecosystem
 
-This package fits into the broader Python image ecosystem, along  with packages like [OpenCV](https://opencv.org/) and [Pillow](https://pillow.readthedocs.io/). While OpenCV and Pillow provide a wide range of general-purpose image processing tools, this package instead specializes in content-aware resizing and transformations, focusing on practical utilities for advanced image manipulations. Functions such as seam carving for resizing, PCA-based image compression, and pooling for dimensionality reduction offer unique capabilities that are not directly available in general-purpose libraries. 
+This package fits into the broader Python image ecosystem, along with packages like [OpenCV](https://opencv.org/), [Pillow](https://pillow.readthedocs.io/), and [scikit-learn](https://scikit-learn.org/). While OpenCV and Pillow provide general-purpose image processing tools, and scikit-learn includes PCA for dimensionality reduction, this package stands out for its simplicity and streamlined functionality. It specializes in content-aware resizing and transformations, focusing on practical utilities for advanced image manipulations. It offers unique capabilities, allowing users to accomplish tasks quickly without needing to manage complex parameters.
 
 ## Installation
 
@@ -42,12 +45,12 @@ To harness the image processing magic of SharpEdge, follow these steps:
 1. Import the required functions from the package:
 
     ```python
-    from sharpedge.reposition_image import reposition_image
-    from sharpedge.frame_image import frame_image
-    from sharpedge.modulate_image import modulate_image
-    from sharpedge.pooling_image import pooling_image
-    from sharpedge.pca_compression import pca_compression
-    from sharpedge.seam_carving import seam_carve
+    from sharpedge import reposition_image
+    from sharpedge import frame_image
+    from sharpedge import modulate_image
+    from sharpedge import pooling_image
+    from sharpedge import pca_compression
+    from sharpedge import seam_carve
     ```
 
 2. (Optional) Load your image as a NumPy array.

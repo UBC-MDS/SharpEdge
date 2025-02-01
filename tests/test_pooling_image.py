@@ -1,17 +1,18 @@
 import pytest
 import numpy as np
-from sharpedge.pooling_image import pooling_image
+from sharpedge import pooling_image
 
 # Valid cases: Testing pooling behavior with different pooling functions
 @pytest.mark.parametrize("img, window_size, pooling_method, expected", [
     (np.array([[1, 2], [3, 4]]), 2, np.max, np.array([[4]])),   # 2x2 pooling with max
     (np.array([[1, 2], [3, 4]]), 2, np.min, np.array([[1]])),   # 2x2 pooling with min
     (np.array([[[1, 2, 3], [4, 5, 6]], [[7, 8, 9], [10, 11, 12]]]), 2, np.mean,
-     np.array([[[5.5, 6.5, 7.5]]]))  # RGB image pooling with mean
+     np.array([[[5.5 / 255, 6.5 / 255, 7.5 / 255]]]))  # RGB image pooling with mean, adjust by 255
 ])
 def test_valid_pooling(img, window_size, pooling_method, expected):
     result = pooling_image(img, window_size, pooling_method)
-    assert np.array_equal(result, expected), f"Expected {expected}, got {result}"
+    # Adjust expected to account for the 255 normalization in the pooling function
+    assert np.allclose(result, expected), f"Expected {expected}, got {result}"
 
 # Edge cases: Single-pixel output, very small input sizes, non-square images
 @pytest.mark.parametrize("img, window_size, pooling_method, expected", [
@@ -27,8 +28,7 @@ def test_valid_pooling(img, window_size, pooling_method, expected):
 ])
 def test_edge_pooling(img, window_size, pooling_method, expected):
     result = pooling_image(img, window_size, pooling_method)
-    assert np.array_equal(result, expected), f"Expected {expected}, got {result}"
-
+    assert np.allclose(result, expected), f"Expected {expected}, got {result}"
 
 # Erroneous cases: Testing logic errors not caught by _input_checker
 @pytest.mark.parametrize("img, window_size, pooling_method, expected_error", [
@@ -41,7 +41,7 @@ def test_erroneous_pooling(img, window_size, pooling_method, expected_error):
     with pytest.raises(expected_error):
         pooling_image(img, window_size, pooling_method)
 
-#Image is not square
+# Image is not square
 @pytest.mark.parametrize("img, window_size, pooling_method, expected_error", [
     (np.array([[1, 2, 3], [4, 5, 6]]), 1, np.mean, None),  # Rectangular image (valid case)
     (np.array([[1], [2], [3]]), 1, np.mean, None),  # Column vector (valid case)
@@ -50,4 +50,3 @@ def test_erroneous_pooling(img, window_size, pooling_method, expected_error):
 def test_non_square_images(img, window_size, pooling_method, expected_error):
     result = pooling_image(img, window_size, pooling_method)
     assert result is not None, f"Expected a result for non-square image"
-

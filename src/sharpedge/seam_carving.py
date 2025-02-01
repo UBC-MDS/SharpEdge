@@ -3,7 +3,7 @@ import warnings
 from scipy.ndimage import convolve
 
 
-# Refernece: DSCI 512 Lab 4
+# Reference: UBC-MDS DSCI 512 Lab 4
 def energy(img):
     """
     Computes the energy map of an image.

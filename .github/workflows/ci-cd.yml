@@ -22,6 +22,9 @@ jobs:
 
       - name: Install package
         run: poetry install
+      
+      - name: Install ipykernel inside poetry env
+        run: poetry run python -m ipykernel install --user --name="sharpedge"
 
       - name: Test with pytest
         run: poetry run pytest tests/ --cov=sharpedge --cov-report=xml
@@ -60,12 +63,13 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          token: ${{ secrets.RELEASE_TOKEN }}
 
       - name: Use Python Semantic Release to prepare release
         id: release
         uses: python-semantic-release/python-semantic-release@v8.3.0
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.RELEASE_TOKEN }}
 
       - name: Publish to TestPyPI
         uses: pypa/gh-action-pypi-publish@release/v1
@@ -92,4 +96,4 @@ jobs:
         uses: python-semantic-release/upload-to-gh-release@main
         if: steps.release.outputs.released == 'true'
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.RELEASE_TOKEN }}
