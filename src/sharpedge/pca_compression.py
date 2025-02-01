@@ -5,9 +5,9 @@ import warnings
 def pca_compression(img, preservation_rate=0.9):
     """
     Compress the input image using Principal Component Analysis (PCA) via the Singular Value Decomposition (SVD) method.
-    This function compresses the size of an image by applying the PCA method while retaining a specified 
-    portion of the original data variance.
-    It supports grayscale (2D) images.
+    This function first applies SVD to decompose the image array into its principal components, and then retains 
+    a specified portion of the eigenvectors based on the preservation rate. The output is the compressed image in 2D array. 
+    This function supports only grayscale (2D) images.
     
     Parameters
     ----------
