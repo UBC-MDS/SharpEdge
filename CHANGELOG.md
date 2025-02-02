@@ -1,6 +1,23 @@
 # CHANGELOG
 
 
+## v1.1.5 (2025-02-02)
+
+### Bug Fixes
+
+- Feedback addressed by Archer - Added missing pytest coverage badge in response to Agam's review
+  ([`864eb8f`](https://github.com/UBC-MDS/SharpEdge/commit/864eb8f6357336df2b1d408ad41c598be7e7ba76))
+
+- Feedback addressed by Archer - Added missing Python version and CI/CD workflow status badges in
+  response to Ximin's review
+  ([`88f8c5f`](https://github.com/UBC-MDS/SharpEdge/commit/88f8c5f583d63753562bcc308859cfd39e9eaa99))
+
+### Refactoring
+
+- Added underscore to intermediate function names and updated docstrings
+  ([`d1bb0a1`](https://github.com/UBC-MDS/SharpEdge/commit/d1bb0a1f374ec36de78d585168a8117154753f8d))
+
+
 ## v1.1.4 (2025-02-02)
 
 ### Bug Fixes
