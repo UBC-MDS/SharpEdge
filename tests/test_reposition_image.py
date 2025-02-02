@@ -35,22 +35,28 @@ def test_valid_inputs(img, flip, rotate, shift_x, shift_y, expected):
 @pytest.mark.filterwarnings("ignore::UserWarning")  # Ignore specific warning in tests
 def test_edge_cases(flip, rotate, shift_x, shift_y):
     img = np.array([[255]])
-    # Call the reposition_image function
     result = reposition_image(img, flip=flip, rotate=rotate, shift_x=shift_x, shift_y=shift_y)
 
 # Test for 3D image (RGB image)
 def test_rgb_image():
-    # Simulate an RGB image (3D array)
-    rgb_img = np.array([[[255, 0, 0], [0, 255, 0]],  # Red and Green pixels
-                        [[0, 0, 255], [255, 255, 0]]])  # Blue and Yellow pixels
-
-    # Test the reposition_image function with this 3D image
+    rgb_img = np.array([[[255, 0, 0], [0, 255, 0]], [[0, 0, 255], [255, 255, 0]]])
     result = reposition_image(rgb_img, flip='none', rotate='up', shift_x=0, shift_y=0)
-    
-    # Ensure the result is the same as the original (since no transformation is applied)
     assert np.array_equal(result, rgb_img), "RGB image was not processed correctly"
 
-# Test erroneous cases 
+# Test for unique shape images (very tall or very wide)
+def test_unique_shape_images():
+    tall_img = np.arange(100).reshape(100, 1)  # 1 pixel wide, 100 pixels tall
+    wide_img = np.arange(100).reshape(1, 100)  # 100 pixels wide, 1 pixel tall
+    
+    result_tall = reposition_image(tall_img, flip='vertical', rotate='up', shift_x=0, shift_y=0)
+    expected_tall = np.flipud(tall_img)  # Vertical flip expected
+    assert np.array_equal(result_tall, expected_tall), "Tall image was not processed correctly"
+    
+    result_wide = reposition_image(wide_img, flip='horizontal', rotate='up', shift_x=0, shift_y=0)
+    expected_wide = np.fliplr(wide_img)  # Horizontal flip expected
+    assert np.array_equal(result_wide, expected_wide), "Wide image was not processed correctly"
+
+# Test erroneous cases
 def test_invalid_flip():
     img = np.array([[1, 2], [3, 4]])
     with pytest.raises(ValueError, match="flip must be one of 'none', 'horizontal', 'vertical', or 'both'."):
