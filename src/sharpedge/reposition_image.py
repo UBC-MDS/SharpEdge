@@ -117,7 +117,7 @@ def reposition_image(img, flip='none', rotate='up', shift_x=0, shift_y=0):
     # Check image dimensions
     if len(img.shape) == 2:
         img_height, img_width = img.shape
-    elif len(img.shape) == 3:
+    else:
         img_height, img_width, _ = img.shape
 
     # Issue warnings for large shifts
