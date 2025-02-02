@@ -1,6 +1,19 @@
 # CHANGELOG
 
 
+## v1.1.3 (2025-02-02)
+
+### Bug Fixes
+
+- Feedback addressed by Inder - Shannon's feedback to include edge cases that have unique image
+  shapes such as 1x100 and 100x1
+  ([`ed95781`](https://github.com/UBC-MDS/SharpEdge/commit/ed95781795d946585a21ae38613eda323938a03a))
+
+- Feedback addressed by Inder - TA feedback to break reposition_image to intermediate functions for
+  easier review
+  ([`f463262`](https://github.com/UBC-MDS/SharpEdge/commit/f46326252d06aa8ebc12b89385c28d07576f447d))
+
+
 ## v1.1.2 (2025-01-31)
 
 ### Bug Fixes
