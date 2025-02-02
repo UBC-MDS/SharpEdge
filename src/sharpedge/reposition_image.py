@@ -2,6 +2,40 @@ import numpy as np
 import warnings
 from sharpedge._utils.utility import Utility
 
+
+def _flip_image(img, flip):
+    """Flips the image based on the specified flip parameter.
+    Private function to be invoked by reposition_image()"""
+    if flip == "horizontal":
+        return np.fliplr(img)
+    elif flip == "vertical":
+        return np.flipud(img)
+    elif flip == "both":
+        return np.fliplr(np.flipud(img))
+    return img
+
+def _rotate_image(img, rotate):
+    """Rotates the image based on the specified rotate parameter.
+    Private function to be invoked by reposition_image()"""
+    if rotate == "left":
+        return np.rot90(img, k=1)
+    elif rotate == "right":
+        return np.rot90(img, k=-1)
+    elif rotate == "down":
+        return np.rot90(img, k=2)
+    return img
+
+def _shift_image_x(img, shift_x):
+    """Shifts the image along the x-axis.
+    Private function to be invoked by reposition_image()"""
+    return np.roll(img, shift_x, axis=1)
+
+def _shift_image_y(img, shift_y):
+    """Shifts the image along the y-axis.
+    Private function to be invoked by reposition_image()"""
+    return np.roll(img, shift_y, axis=0)
+
+
 def reposition_image(img, flip='none', rotate='up', shift_x=0, shift_y=0):
     """
     Flip, rotate, and shift an image based on the specified requested action.
@@ -66,52 +100,39 @@ def reposition_image(img, flip='none', rotate='up', shift_x=0, shift_y=0):
     # Input validation
     Utility._input_checker(img)
 
-    # Validate flip
+    # Validate parameters
     valid_flips = ["none", "horizontal", "vertical", "both"]
     if flip not in valid_flips:
         raise ValueError("flip must be one of 'none', 'horizontal', 'vertical', or 'both'.")
 
-    # Validate rotate
     valid_rotations = ["up", "left", "right", "down"]
     if rotate not in valid_rotations:
         raise ValueError("rotate must be one of 'up', 'left', 'right', or 'down'.")
 
-    # Validate shift_x and shift_y
     if not isinstance(shift_x, int):
         raise TypeError("shift_x must be an integer.")
     if not isinstance(shift_y, int):
         raise TypeError("shift_y must be an integer.")
 
-    # Check if the image is 2D or 3D
+    # Check image dimensions
     if len(img.shape) == 2:
-        img_height, img_width = img.shape  # Grayscale image (2D)
+        img_height, img_width = img.shape
     elif len(img.shape) == 3:
-        img_height, img_width, _ = img.shape  # RGB image (3D)
+        img_height, img_width, _ = img.shape
 
-    # Check if shift values are larger than image dimensions and issue a warning if necessary
+    # Issue warnings for large shifts
     if shift_x >= img_width or shift_y >= img_height:
         warnings.warn(f"Shift values ({shift_x}, {shift_y}) are larger than the image dimensions.", UserWarning)
 
-    # Perform flipping
-    if flip == "horizontal":
-        img = np.fliplr(img)
-    elif flip == "vertical":
-        img = np.flipud(img)
-    elif flip == "both":
-        img = np.fliplr(np.flipud(img))
-
-    # Perform rotation
-    if rotate == "left":
-        img = np.rot90(img, k=1)
-    elif rotate == "right":
-        img = np.rot90(img, k=-1)
-    elif rotate == "down":
-        img = np.rot90(img, k=2)
-
-    # Perform shifting
-    img = np.roll(img, shift_x, axis=1)  # Shift along x-axis
-    img = np.roll(img, shift_y, axis=0)  # Shift along y-axis
+    # Apply transformations
+    img = _flip_image(img, flip)
+    img = _rotate_image(img, rotate)
+    img = _shift_image_x(img, shift_x)
+    img = _shift_image_y(img, shift_y)
 
     return img
+
+
+
 
 
