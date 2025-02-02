@@ -4,13 +4,14 @@ from scipy.ndimage import convolve
 
 
 # Reference: UBC-MDS DSCI 512 Lab 4
-def energy(img):
+def _energy(img):
     """
     Computes the energy map of an image.
 
     This function calculates the energy of each pixel. The
     energy map highlights areas with high contrast, which
     are less likely to be removed during seam carving.
+    Private function to be invoked by seam_carve().
 
     Parameters
     ----------
@@ -31,7 +32,7 @@ def energy(img):
     Examples
     --------
     >>> img = np.random.rand(8, 5, 3)
-    >>> e = energy(img)
+    >>> e = _energy(img)
     >>> print(e.shape)
     (8, 5)
     """
@@ -45,9 +46,10 @@ def energy(img):
     return np.sum(energy_map, axis=2)
 
 
-def find_vertical_seam(energy):
+def _find_vertical_seam(energy):
     """
     Find the vertical seam of lowest total energy in the image.
+    Private function to be invoked by seam_carve().
 
     Parameters
     ----------
@@ -67,7 +69,7 @@ def find_vertical_seam(energy):
     Examples
     --------
     >>> e = np.array([[0.6625, 0.3939], [1.0069, 0.7383]])
-    >>> seam = find_vertical_seam(e)
+    >>> seam = _find_vertical_seam(e)
     >>> print(seam)
     [1, 1]
     """
@@ -101,10 +103,11 @@ def find_vertical_seam(energy):
     return seam - 1
 
 
-def find_horizontal_seam(energy):
+def _find_horizontal_seam(energy):
     """
     Find the horizontal seam of lowest total energy
     in the image by transposing the energy map.
+    Private function to be invoked by seam_carve().
 
     Parameters
     ----------
@@ -124,16 +127,17 @@ def find_horizontal_seam(energy):
     Examples
     --------
     >>> e = np.array([[0.6625, 0.3939], [1.0069, 0.7383]])
-    >>> seam = find_horizontal_seam(e)
+    >>> seam = _find_horizontal_seam(e)
     >>> print(seam)
     [0, 0]
     """
-    return find_vertical_seam(energy.T)
+    return _find_vertical_seam(energy.T)
 
 
-def remove_vertical_seam(img, seam):
+def _remove_vertical_seam(img, seam):
     """
     Remove a vertical seam from an image.
+    Private function to be invoked by seam_carve().
 
     Parameters
     ----------
@@ -159,7 +163,7 @@ def remove_vertical_seam(img, seam):
     --------
     >>> img = np.random.rand(8, 5, 3)
     >>> seam = [2, 1, 3, 2, 0, 1, 4, 3]
-    >>> new_img = remove_vertical_seam(img, seam)
+    >>> new_img = _remove_vertical_seam(img, seam)
     >>> print(new_img.shape)
     (8, 4, 3)
     """
@@ -181,9 +185,10 @@ def remove_vertical_seam(img, seam):
     return resized_image
 
 
-def remove_horizontal_seam(img, seam):
+def _remove_horizontal_seam(img, seam):
     """
     Remove a horizontal seam from an image.
+    Private function to be invoked by seam_carve().
 
     Parameters
     ----------
@@ -209,11 +214,11 @@ def remove_horizontal_seam(img, seam):
     --------
     >>> img = np.random.rand(5, 8, 3)
     >>> seam = [2, 1, 3, 2, 0, 1, 4, 3]
-    >>> new_img = remove_horizontal_seam(img, seam)
+    >>> new_img = _remove_horizontal_seam(img, seam)
     >>> print(new_img.shape)
     (4, 8, 3)
     """
-    return np.transpose(remove_vertical_seam(np.transpose(img, (1, 0, 2)), seam), (1, 0, 2))
+    return np.transpose(_remove_vertical_seam(np.transpose(img, (1, 0, 2)), seam), (1, 0, 2))
 
 
 def seam_carve(img, target_height, target_width):
@@ -301,16 +306,16 @@ def seam_carve(img, target_height, target_width):
 
     # Remove vertical seams until desired width is reached
     while width > target_width:
-        energy_map = energy(result)
-        seam = find_vertical_seam(energy_map)
-        result = remove_vertical_seam(result, seam)
+        energy_map = _energy(result)
+        seam = _find_vertical_seam(energy_map)
+        result = _remove_vertical_seam(result, seam)
         width = result.shape[1]
 
     # Remove horizontal seams until desired height is reached  
     while height > target_height:
-        energy_map = energy(result)
-        seam = find_horizontal_seam(energy_map)
-        result = remove_horizontal_seam(result, seam)
+        energy_map = _energy(result)
+        seam = _find_horizontal_seam(energy_map)
+        result = _remove_horizontal_seam(result, seam)
         height = result.shape[0]
 
     return result
