@@ -1,6 +1,15 @@
 # CHANGELOG
 
 
+## v1.1.4 (2025-02-02)
+
+### Bug Fixes
+
+- Feedback addressed by Inder - Agam's & Green-zy's feedback to amend pooling tutorial where min
+  pooling was described but mean pooling was used in the function
+  ([`416fd86`](https://github.com/UBC-MDS/SharpEdge/commit/416fd863c79c66780b9d4a0b831c03504355de43))
+
+
 ## v1.1.3 (2025-02-02)
 
 ### Bug Fixes
