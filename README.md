@@ -1,6 +1,7 @@
 # SharpEdge
 
 [![Documentation Status](https://readthedocs.org/projects/sharpedge/badge/?version=latest)](https://sharpedge.readthedocs.io/en/latest/?badge=latest)
+[![codecov](https://codecov.io/github/UBC-MDS/SharpEdge/graph/badge.svg?token=seDsuoIJEq)](https://codecov.io/github/UBC-MDS/SharpEdge)
 
 Collection of image processing tools and techniques, including padding, flipping, colorscale conversion, seam carving, and image shrinking. Designed for efficient manipulation and transformation of images.
 
