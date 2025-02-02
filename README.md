@@ -1,7 +1,9 @@
 # SharpEdge
 
 [![Documentation Status](https://readthedocs.org/projects/sharpedge/badge/?version=latest)](https://sharpedge.readthedocs.io/en/latest/?badge=latest)
+[![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3110/)
 [![codecov](https://codecov.io/github/UBC-MDS/SharpEdge/graph/badge.svg?token=seDsuoIJEq)](https://codecov.io/github/UBC-MDS/SharpEdge)
+[![ci-cd](https://github.com/UBC-MDS/SharpEdge/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/UBC-MDS/SharpEdge/actions/workflows/ci-cd.yml)
 
 Collection of image processing tools and techniques, including padding, flipping, colorscale conversion, seam carving, and image shrinking. Designed for efficient manipulation and transformation of images.
 
