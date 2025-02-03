@@ -2,8 +2,10 @@ import numpy as np
 import warnings
 from sharpedge._utils.utility import Utility
 
-def format_conversion(img, color):
+def _format_conversion(img, color):
     """
+    Private function to be invoked by frame_image().
+    
     Convert grayscale image to RGB if necessary, and ensure color format is valid.
 
     This function checks if the image is grayscale and converts it to RGB if needed.
@@ -60,8 +62,10 @@ def format_conversion(img, color):
     
     return img, color
 
-def image_resize(img, h_border, w_border, inside):
+def _image_resize(img, h_border, w_border, inside):
     """
+    Private function to be invoked by frame_image().
+
     Resize the image by adding borders either inside or outside.
 
     This function handles resizing the image, ensuring that if borders are added inside,
@@ -119,13 +123,15 @@ def image_resize(img, h_border, w_border, inside):
         img = img[h_border:-h_border or None, w_border:-w_border or None, :]
     
     # Warning: when single side outside border is larger than the image dimensions
-    if not inside and (h_border >= img.shape[0] or w_border >= img.shape[1]):
+    elif not inside and (h_border >= img.shape[0] or w_border >= img.shape[1]):
         warnings.warn("Single side border size exceeds image size.", UserWarning)
 
     return img
 
-def color_padding(img, h_border, w_border, color):
+def _color_padding(img, h_border, w_border, color):
     """
+    Private function to be invoked by frame_image().
+
     Apply color padding by adding a border around the image.
 
     This function adds a border of the specified color around the image, either inside 
@@ -207,12 +213,12 @@ def frame_image(img, h_border=20, w_border=20, inside=False, color=0):
         warnings.warn("The image is too small for meaningful visual information. Proceeding may not yield interpretable results.", UserWarning)
 
     # Handle format conversion (grayscale to RGB) and color padding validation
-    img, color = format_conversion(img, color)
+    img, color = _format_conversion(img, color)
 
     # Handle image resizing (inside or outside border)
-    img = image_resize(img, h_border, w_border, inside)
+    img = _image_resize(img, h_border, w_border, inside)
 
     # Apply color padding (create the framed image with border)
-    frame = color_padding(img, h_border, w_border, color)
+    framed_img = _color_padding(img, h_border, w_border, color)
 
-    return frame
+    return framed_img
