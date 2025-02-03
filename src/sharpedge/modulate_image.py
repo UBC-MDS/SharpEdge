@@ -241,20 +241,11 @@ def modulate_image(img, mode='as-is', ch_swap=None, ch_extract=None):
     
     Examples
     --------
-    # Convert an RGB image to grayscale
-    grayscale_image = modulate_image(rgb_image, mode='gray')
-
-    # Convert a grayscale image back to RGB
-    rgb_image_again = modulate_image(grayscale_image, mode='rgb')
-
-    # Extract the Red channel from an RGB image
-    red_channel = modulate_image(rgb_image, ch_extract=[0])
-
-    # Extract the Red and Green channels from an RGB image
-    red_green_channels = modulate_image(rgb_image, ch_extract=[0, 1])
-
-    # Swap the Red and Blue channels in an RGB image
-    swapped_image = modulate_image(rgb_image, ch_swap=(2, 0, 1))
+    >>> grayscale_image = modulate_image(rgb_image, mode='gray')  # Convert an RGB image to grayscale
+    >>> rgb_image_again = modulate_image(grayscale_image, mode='rgb')  # Convert a grayscale image back to RGB
+    >>> red_channel = modulate_image(rgb_image, ch_extract=[0])  # Extract the Red channel from an RGB image
+    >>> red_green_channels = modulate_image(rgb_image, ch_extract=[0, 1])  # Extract the Red and Green channels from an RGB image
+    >>> swapped_image = modulate_image(rgb_image, ch_swap=(2, 0, 1))  # Swap the Red and Blue channels in an RGB image
     """
     # Input validation
     Utility._input_checker(img)
