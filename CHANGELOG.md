@@ -1,6 +1,15 @@
 # CHANGELOG
 
 
+## v1.1.7 (2025-02-03)
+
+### Bug Fixes
+
+- Feedback addressed by Archer - Added a note in the README to guide users to the documentation for
+  examples
+  ([`e4f2f58`](https://github.com/UBC-MDS/SharpEdge/commit/e4f2f5808fc984b9b48fe797fb5893138fc7ae6f))
+
+
 ## v1.1.6 (2025-02-03)
 
 ### Bug Fixes
