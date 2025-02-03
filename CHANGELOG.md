@@ -1,6 +1,15 @@
 # CHANGELOG
 
 
+## v1.1.12 (2025-02-03)
+
+### Bug Fixes
+
+- Feedback addressed by Jenny - TA feedback on tackle a lot of error cases by breaking down test
+  functions
+  ([`8ab15e1`](https://github.com/UBC-MDS/SharpEdge/commit/8ab15e14d6361338852aca41d286042d87b36eb0))
+
+
 ## v1.1.11 (2025-02-03)
 
 ### Bug Fixes
