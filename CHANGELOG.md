@@ -1,6 +1,19 @@
 # CHANGELOG
 
 
+## v1.1.8 (2025-02-03)
+
+### Bug Fixes
+
+- Feedback addressed by Inder - Agam's feedback to ensure that image size does not stay the same
+  regardless of image dimensions
+  ([`866cd7e`](https://github.com/UBC-MDS/SharpEdge/commit/866cd7eeb67dbbe9f56d02e1fb2e3345130e3812))
+
+- Feedback addressed by Inder - Shannon's feedback to address tutorial typo where directions talk
+  about white border but gray border is being used in function
+  ([`b1bb017`](https://github.com/UBC-MDS/SharpEdge/commit/b1bb0174fd40c654464127aadea7bfce393dcbf4))
+
+
 ## v1.1.7 (2025-02-03)
 
 ### Bug Fixes
