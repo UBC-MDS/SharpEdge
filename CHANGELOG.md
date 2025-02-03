@@ -1,6 +1,18 @@
 # CHANGELOG
 
 
+## v1.1.9 (2025-02-03)
+
+### Bug Fixes
+
+- Additional feedback from team members incorporated
+  ([`72038bb`](https://github.com/UBC-MDS/SharpEdge/commit/72038bbd5d97de529053f49324bbcd08e77e25e5))
+
+- Feedback addressed by Jenny - TA feedback to break frame_image to intermediate functions for
+  easier review
+  ([`4c6dc57`](https://github.com/UBC-MDS/SharpEdge/commit/4c6dc5762a379b965527f71c7fa38fc5fea863ba))
+
+
 ## v1.1.8 (2025-02-03)
 
 ### Bug Fixes
@@ -94,6 +106,9 @@
 
 ### Bug Fixes
 
+- Fixed the typo in title for image reposition
+  ([`6f148d1`](https://github.com/UBC-MDS/SharpEdge/commit/6f148d15c990fc6dc8aabc80ddd5f6cefc7def4c))
+
 - Try to fix NoSuchKernel
   ([`816b36c`](https://github.com/UBC-MDS/SharpEdge/commit/816b36c6dd6a73a5715283db6f307b2b9efc23b3))
 
@@ -107,14 +122,6 @@
 
 - Updated ci-cd.yml for RELEASE_TOKEN
   ([`2762745`](https://github.com/UBC-MDS/SharpEdge/commit/2762745abe081df88183ecc5b75f3cb1d791858f))
-
-
-## v0.0.2 (2025-01-27)
-
-### Bug Fixes
-
-- Fixed the typo in title for image reposition
-  ([`6f148d1`](https://github.com/UBC-MDS/SharpEdge/commit/6f148d15c990fc6dc8aabc80ddd5f6cefc7def4c))
 
 ### Documentation
 
