@@ -1,6 +1,15 @@
 # CHANGELOG
 
 
+## v1.1.14 (2025-02-03)
+
+### Bug Fixes
+
+- Feedback addressed by Archer - Updated image loading instructions to use Pillow in README, added
+  Pillow to Poetry dependencies
+  ([`9cd1fd0`](https://github.com/UBC-MDS/SharpEdge/commit/9cd1fd08109753002abf1f8941d121a2bd7e7dc6))
+
+
 ## v1.1.13 (2025-02-03)
 
 ### Bug Fixes
