@@ -1,6 +1,32 @@
 # CHANGELOG
 
 
+## v1.1.13 (2025-02-03)
+
+### Bug Fixes
+
+- Feedback addressed by Hankun Xiao - Peer Review feedback on adding reference to color encoding in
+  the intro tutorial
+  ([`8bc04e9`](https://github.com/UBC-MDS/SharpEdge/commit/8bc04e9105df5144fe9277621b710bd68ab94f6c))
+
+- Feedback addressed by Hankun Xiao - Peer Review feedback on adding tutorial on export images to
+  local disk
+  ([`cd0b66a`](https://github.com/UBC-MDS/SharpEdge/commit/cd0b66afb5b72e175f25c7187d86d3ae61cc1d7d))
+
+### Build System
+
+- Change html theme to rtd (from press) as press has minial updates
+  ([`17511cd`](https://github.com/UBC-MDS/SharpEdge/commit/17511cd6513db72812571776242282e84c999ca8))
+
+### Documentation
+
+- Clarify the usage of imported libaries, remove redundant imgs,and change load image function
+  ([`ea97a0a`](https://github.com/UBC-MDS/SharpEdge/commit/ea97a0a825101c5ce71a3dfcac293842d2ee8b92))
+
+- Update examples section to meet numpy style for API reference
+  ([`d5f67db`](https://github.com/UBC-MDS/SharpEdge/commit/d5f67db36eac92183295066f1bcc2ecaae14ff69))
+
+
 ## v1.1.12 (2025-02-03)
 
 ### Bug Fixes
