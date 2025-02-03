@@ -43,6 +43,8 @@ $ pip install sharpedge
 
 ## Usage
 
+For detailed explanations, tutorials, and image examples for each function, visit [our official documentation](https://sharpedge.readthedocs.io/en/latest/?badge=latest).
+
 To harness the image processing magic of SharpEdge, follow these steps:
 
 1. Import the required functions from the package:
