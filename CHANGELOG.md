@@ -1,6 +1,25 @@
 # CHANGELOG
 
 
+## v1.1.6 (2025-02-03)
+
+### Bug Fixes
+
+- Feedback addressed by Jenny - peer review feedback to fix grammor mistake in seam_carve docs`
+  ([`9c009ca`](https://github.com/UBC-MDS/SharpEdge/commit/9c009caf386cbc8c666a2685fa65fce79e225071))
+
+- Feedback addressed by Jenny - peer review feedback to include arguments of function in tutorial
+  (on top of docstring)
+  ([`6bc2a72`](https://github.com/UBC-MDS/SharpEdge/commit/6bc2a72e22efc371000e821bd7ac884f3658d0c3))
+
+- Feedback addressed by Jenny - TA and peer review feedback to break down functions into
+  intermediate functions for easier review
+  ([`d25f614`](https://github.com/UBC-MDS/SharpEdge/commit/d25f61418db7618f797166f9446ecced909d4be7))
+
+- Feedback addressed by Jenny on peer review CHANGELOG.md version order
+  ([`d5d0fc3`](https://github.com/UBC-MDS/SharpEdge/commit/d5d0fc376ffb73d56f76dc2800fb7cd2b5a3d1fb))
+
+
 ## v1.1.5 (2025-02-02)
 
 ### Bug Fixes
@@ -66,6 +85,9 @@
 
 - Updated ci-cd.yml for RELEASE_TOKEN
   ([`2762745`](https://github.com/UBC-MDS/SharpEdge/commit/2762745abe081df88183ecc5b75f3cb1d791858f))
+
+
+## v0.0.2 (2025-01-27)
 
 ### Bug Fixes
 
