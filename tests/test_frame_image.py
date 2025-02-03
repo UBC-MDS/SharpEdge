@@ -122,14 +122,34 @@ def error_description():
     (np.random.randint(0, 256, (5, 5)), 256, 20, 20, False, ValueError, COMMON_DESC["value_err_gs"]),  
     (np.random.randint(0, 256, (5, 5, 3)), (255, 256, 0), 20, 20, False, ValueError, COMMON_DESC["value_err_rgb"]), 
     (np.random.randint(0, 256, (5, 5, 3)), (-1, -255, 0), 20, 20, False, ValueError, COMMON_DESC["value_err_rgb"]),  
+])
+def test_invalid_color_input(img_shape, color, h_border, w_border, inside, expected_exception, description):
+    """
+    Test function for error cases of Invalid color input (wrong format, incorrect components, wrong type, out of range) in the `frame_image()` function.
+
+    Each case expects the correct exception and error description to be raised.
+    """
+    with pytest.raises(expected_exception, match = description):
+        frame_image(img_shape, h_border=h_border, w_border=w_border, inside=inside, color=color)
 
 
+@pytest.mark.parametrize("img_shape, color, h_border, w_border, inside, expected_exception, description", [
     # Category II: Too Large Inside Border Size
     # 5. Too large inside border (grayscale and RGB) - image too small
     (np.random.randint(0, 256, (5, 5)), 0, 20, 20, True, ValueError, COMMON_DESC["value_err_rel"]),   
     (np.random.randint(0, 256, (10, 10, 3)), 0, 20, 20, True, ValueError, COMMON_DESC["value_err_rel"]),  
+])
+def test_too_large_border(img_shape, color, h_border, w_border, inside, expected_exception, description):
+    """
+    Test function for error cases of too large border for small image in the `frame_image()` function.
+
+    Each case expects the correct exception and error description to be raised.
+    """
+    with pytest.raises(expected_exception, match = description):
+        frame_image(img_shape, h_border=h_border, w_border=w_border, inside=inside, color=color)
 
 
+@pytest.mark.parametrize("img_shape, color, h_border, w_border, inside, expected_exception, description", [
     # Category III: Invalid `h_border` and `w_border` Arguments
     # 6. Invalid `*_border` format
     (np.random.randint(0, 256, (5, 5)), 0, "num", "20", False, TypeError, COMMON_DESC["type_err_border"]),  
@@ -145,17 +165,11 @@ def error_description():
     (np.random.randint(0, 256, (5, 5)), 0, -1, -1, False, ValueError, COMMON_DESC["value_err_border"]),  
     (np.random.randint(0, 256, (5, 5, 3)), 0, -1, -1, False, ValueError, COMMON_DESC["value_err_border"]),  
 ])
-def test_error_cases(img_shape, color, h_border, w_border, inside, expected_exception, description):
+def test_invalid_border_inputs(img_shape, color, h_border, w_border, inside, expected_exception, description):
     """
-    Test function for various error cases in the `frame_image()` function.
-
-    It checks the following scenarios:
-    1. Invalid color input (wrong format, incorrect components, wrong type, out of range).
-    2. Too large border for small image.
-    3. Invalid border inputs (wrong format, wrong type, negative values).
+    Test function for error cases of invalid border inputs (wrong format, wrong type, negative values) in the `frame_image()` function.
 
     Each case expects the correct exception and error description to be raised.
     """
     with pytest.raises(expected_exception, match = description):
         frame_image(img_shape, h_border=h_border, w_border=w_border, inside=inside, color=color)
-
