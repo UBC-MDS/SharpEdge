@@ -1,6 +1,15 @@
 # CHANGELOG
 
 
+## v1.1.10 (2025-02-03)
+
+### Bug Fixes
+
+- Feedback addressed by Hankun Xiao - Peer Review feedback on improve PCA Image Compression funtion
+  docstring and tutorial by adding function algorithm and use case
+  ([`a95b197`](https://github.com/UBC-MDS/SharpEdge/commit/a95b1976afaf96d0b562f591a0e0602795da3478))
+
+
 ## v1.1.9 (2025-02-03)
 
 ### Bug Fixes

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "sharpedge"
-version = "1.1.9"
+version = "1.1.10"
 description = "Collection of image processing tools and techniques, including padding, flipping, colorscale conversion, seam carving, and image shrinking. Designed for efficient manipulation and transformation of images."
 authors = ["Jenny Zhang, Archer Liu, Inder Khera, Hankun Xiao"]
 license = "MIT"
