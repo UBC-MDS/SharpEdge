@@ -2,8 +2,10 @@ import numpy as np
 import warnings
 from sharpedge._utils.utility import Utility
 
-def mode_conversion(img, mode):
+def _mode_conversion(img, mode):
     """
+    Private function to be invoked by modulate_image().
+    
     Validate the mode and perform mode conversion (grayscale ↔ RGB or 'as-is').
 
     This function checks whether the requested mode is valid, and if so, converts the image 
@@ -54,8 +56,10 @@ def mode_conversion(img, mode):
     
     return img
 
-def channel_swap(img, ch_swap):
+def _channel_swap(img, ch_swap):
     """
+    Private function to be invoked by modulate_image().
+    
     Perform channel swapping on the RGB image.
 
     This function swaps the RGB channels according to the specified order in `ch_swap`.
@@ -102,8 +106,10 @@ def channel_swap(img, ch_swap):
     
     return img[..., ch_swap]
 
-def channel_extract(img, ch_extract):
+def _channel_extract(img, ch_extract):
     """
+    Private function to be invoked by modulate_image().
+    
     Perform channel extraction on the RGB image.
 
     This function extracts the specified RGB channels and sets the unselected channels to 0.
@@ -258,7 +264,7 @@ def modulate_image(img, mode='as-is', ch_swap=None, ch_extract=None):
         warnings.warn("Mode is 'as-is' and no channel operations are specified. Return the original image.", UserWarning)
     
     # Perform mode conversion (validate and convert mode)
-    img = mode_conversion(img, mode)
+    img = _mode_conversion(img, mode)
 
     # Handle grayscale image operations
     if len(img.shape) == 2:
@@ -268,9 +274,9 @@ def modulate_image(img, mode='as-is', ch_swap=None, ch_extract=None):
     # Handle RGB image channel manipulations
     if len(img.shape) == 3:
         if ch_swap is not None:
-            img = channel_swap(img, ch_swap)
+            img = _channel_swap(img, ch_swap)
         
         if ch_extract is not None:
-            img = channel_extract(img, ch_extract)
+            img = _channel_extract(img, ch_extract)
 
     return img
