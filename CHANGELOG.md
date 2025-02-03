@@ -1,6 +1,19 @@
 # CHANGELOG
 
 
+## v1.1.15 (2025-02-03)
+
+### Bug Fixes
+
+- Feedback addressed by Archer & Jenny(commit ea97a0a) - Used pillow for image import and clarified
+  skimage is not required to run the package
+  ([`fe7059e`](https://github.com/UBC-MDS/SharpEdge/commit/fe7059e6573b9578d237684961d3ef78cabd706f))
+
+- Feedback addressed by Archer - Shortened printed RGB arrays in tutorial by displaying only the
+  first 3 rows and columns
+  ([`b8ba6c6`](https://github.com/UBC-MDS/SharpEdge/commit/b8ba6c6d69b76e45451301f5a9693cb19a3e15f4))
+
+
 ## v1.1.14 (2025-02-03)
 
 ### Bug Fixes
