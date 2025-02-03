@@ -67,9 +67,6 @@
 - Updated ci-cd.yml for RELEASE_TOKEN
   ([`2762745`](https://github.com/UBC-MDS/SharpEdge/commit/2762745abe081df88183ecc5b75f3cb1d791858f))
 
-
-## v0.0.2 (2025-01-27)
-
 ### Bug Fixes
 
 - Fixed the typo in title for image reposition
