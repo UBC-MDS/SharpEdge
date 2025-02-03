@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v1.1.11 (2025-02-03)
+
+### Bug Fixes
+
+- Change to private function and add note to docstring for consistency across all functions
+  ([`6eeb5ff`](https://github.com/UBC-MDS/SharpEdge/commit/6eeb5ff1a45c7be18f849448f23f9c29eeacfd7c))
+
+
 ## v1.1.10 (2025-02-03)
 
 ### Bug Fixes
