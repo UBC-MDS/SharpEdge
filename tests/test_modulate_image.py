@@ -128,14 +128,32 @@ def error_desc():
         # Category I: Invalid `mode`
         ("img_gray", 'invalid', None, None, ValueError, "value_err_mode"), 
         ("img_rgb", 'invalid', None, None, ValueError, "value_err_mode"),
-        
+    ]
+)
+def test_invalid_mode(img_dict, error_desc, test_img, mode, ch_swap, ch_extract, expected_exception, desc_key):
+    """
+    Test function for error cases of invalid `mode` argument in the `frame_image()` function.
+
+    Each case expects the correct exception and error description to be raised.
+    """
+    # Retrieve the actual image and expected output from the fixture dictionary
+    test_img_array = img_dict[test_img]  # Access input image array
+    description = error_desc[desc_key]  # Access expected warning msg
+
+    # Use pytest's `raises` to raise the expected error during the function call
+    with pytest.raises(expected_exception, match = description):
+        modulate_image(test_img_array, mode=mode, ch_extract=ch_extract, ch_swap=ch_swap)
+
+
+@pytest.mark.parametrize(
+    "test_img, mode, ch_swap, ch_extract, expected_exception, desc_key",
+    [
         # Category II: Invalid `ch_swap`
         # 1. Incorrect input data type
         ("img_gray", 'rgb', [0.0, 1.0, 2.0], None, TypeError, "type_err_swap_int"),
         ("img_gray", 'rgb', (0.1, 1.1, 2.1), None, TypeError, "type_err_swap_int"), 
         ("img_gray", 'rgb', 'wrong_type', None, TypeError, "type_err_swap_type"), 
         ("img_gray", 'rgb', np.array([0, 1, 2]), None, TypeError, "type_err_swap_type"),
-
 
         # 2. Incorrect indices or length
         ("img_gray", 'rgb', [0, 1], None, ValueError, "value_err_swap_len_ind"),  # Not enough elements
@@ -146,8 +164,26 @@ def error_desc():
         # 3. Duplicate indices
         ("img_gray", 'rgb', [0, 1, 1], None, ValueError, "value_err_swap_no_dup"),  
         ("img_gray", 'rgb', (2, 2, 2), None, ValueError, "value_err_swap_no_dup"),  
+    ]
+)
+def test_invalid_ch_swap(img_dict, error_desc, test_img, mode, ch_swap, ch_extract, expected_exception, desc_key):
+    """
+    Test function for error cases of invalid `ch_swap` argument in the `frame_image()` function.
 
-        
+    Each case expects the correct exception and error description to be raised.
+    """
+    # Retrieve the actual image and expected output from the fixture dictionary
+    test_img_array = img_dict[test_img]  # Access input image array
+    description = error_desc[desc_key]  # Access expected warning msg
+
+    # Use pytest's `raises` to raise the expected error during the function call
+    with pytest.raises(expected_exception, match = description):
+        modulate_image(test_img_array, mode=mode, ch_extract=ch_extract, ch_swap=ch_swap)
+
+
+@pytest.mark.parametrize(
+    "test_img, mode, ch_swap, ch_extract, expected_exception, desc_key",
+    [
         # Category III: Invalid `ch_extract`
         # 4. Incorrect input data type
         ("img_gray", 'rgb', None, [0.0], TypeError, "type_err_extr_int"),
@@ -168,9 +204,11 @@ def error_desc():
         ("img_gray", 'rgb', None, (0, 0), ValueError, "value_err_extr_no_dup"),  
     ]
 )
-def test_error_cases(img_dict, error_desc, test_img, mode, ch_swap, ch_extract, expected_exception, desc_key):
+def test_invalid_ch_extract(img_dict, error_desc, test_img, mode, ch_swap, ch_extract, expected_exception, desc_key):
     """
-    Test error cases where expected errors should be raised.
+    Test function for error cases of invalid `ch_extract` argument in the `frame_image()` function.
+
+    Each case expects the correct exception and error description to be raised.
     """
     # Retrieve the actual image and expected output from the fixture dictionary
     test_img_array = img_dict[test_img]  # Access input image array
