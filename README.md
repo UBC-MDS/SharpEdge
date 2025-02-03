@@ -61,7 +61,6 @@ To harness the image processing magic of SharpEdge, follow these steps:
 2. (Optional) Load your image as a NumPy array (if it isn't already).
 
       ```python
-      # Ensure that you have Pillow and numpy installed in your environment
       from PIL import Image
       import numpy as np
 
