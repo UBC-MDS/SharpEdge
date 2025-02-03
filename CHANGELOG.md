@@ -113,7 +113,7 @@
 
 ### Bug Fixes
 
-- Feedback addressed by Jenny - peer review feedback to fix grammor mistake in seam_carve docs`
+- Feedback addressed by Jenny - peer review feedback to fix grammor mistake in seam_carve docs
   ([`9c009ca`](https://github.com/UBC-MDS/SharpEdge/commit/9c009caf386cbc8c666a2685fa65fce79e225071))
 
 - Feedback addressed by Jenny - peer review feedback to include arguments of function in tutorial
